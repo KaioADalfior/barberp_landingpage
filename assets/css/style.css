@@ -109,6 +109,13 @@ svg {
   max-width: 100%;
 }
 
+/* "img { display: block }" acima, por ser regra de autor, tem prioridade
+   sobre o "[hidden] { display: none }" do navegador — sem isto, uma
+   <img hidden> continuaria aparecendo (caso real do lightbox). */
+[hidden] {
+  display: none !important;
+}
+
 h1, h2, h3, h4, p, ul, ol, figure {
   margin: 0;
 }
@@ -1027,6 +1034,12 @@ p {
   border-radius: var(--radius-md);
 }
 
+.lightbox__img {
+  max-height: 82vh;
+  object-fit: contain;
+  background: var(--surface-1);
+}
+
 .lightbox__close {
   position: absolute;
   top: var(--space-5);
@@ -1173,6 +1186,15 @@ p {
   color: var(--blue-light);
   flex-shrink: 0;
   margin-top: 2px;
+}
+
+.online-booking__photo {
+  width: 100%;
+  max-width: 320px;
+  margin-inline: auto;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
 }
 
 /* -------------------------------------------------------------------------

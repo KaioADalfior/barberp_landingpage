@@ -93,11 +93,11 @@ $telas = [
         'mockup'   => 'agendamentos',
     ],
     [
-        'id'       => 'financeiro-tela',
-        'titulo'   => 'Dashboard Financeiro',
-        'legenda'  => 'Receitas, despesas e saldo, sempre atualizados.',
-        'imagem'   => 'assets/images/barberp/financeiro.png',
-        'mockup'   => 'financeiro',
+        'id'       => 'clientes-tela',
+        'titulo'   => 'Clientes',
+        'legenda'  => 'Cadastro de cada cliente, com telefone, e-mail e histórico à mão.',
+        'imagem'   => 'assets/images/barberp/clientes.png',
+        'mockup'   => 'clientes',
     ],
     [
         'id'       => 'fiados-tela',
@@ -110,7 +110,7 @@ $telas = [
         'id'       => 'agenda-online-tela',
         'titulo'   => 'Agenda Online',
         'legenda'  => 'Cliente escolhe o horário pelo celular, sem precisar ligar.',
-        'imagem'   => 'assets/images/barberp/agenda-online.png',
+        'imagem'   => 'assets/images/barberp/agenda-online01.png',
         'mockup'   => 'agenda-online',
     ],
 ];
@@ -500,8 +500,25 @@ function icon(string $nome, string $classe = ''): string
             <div class="carousel reveal" data-carousel>
                 <div class="carousel__viewport">
                     <div class="carousel__track" data-carousel-track>
-                        <?php foreach ($telas as $i => $t): ?>
+                        <?php foreach ($telas as $i => $t):
+                            // Se a captura real já foi adicionada em assets/images/barberp/,
+                            // usa a imagem de verdade. Enquanto não existir, mostra o
+                            // mockup elegante em CSS/HTML como alternativa.
+                            $caminhoImagemReal = __DIR__ . '/' . $t['imagem'];
+                            $temImagemReal = file_exists($caminhoImagemReal);
+                        ?>
                         <figure class="carousel__slide" role="group" aria-roledescription="slide" aria-label="<?= $i + 1 ?> de <?= count($telas) ?>: <?= htmlspecialchars($t['titulo']) ?>">
+                            <?php if ($temImagemReal): ?>
+                                <img
+                                    src="/<?= htmlspecialchars($t['imagem']) ?>"
+                                    alt="Captura de tela do BarbERP — <?= htmlspecialchars($t['titulo']) ?>: <?= htmlspecialchars($t['legenda']) ?>"
+                                    loading="lazy"
+                                    decoding="async"
+                                    data-lightbox-trigger
+                                    data-slide-title="<?= htmlspecialchars($t['titulo']) ?>"
+                                    data-slide-src="/<?= htmlspecialchars($t['imagem']) ?>"
+                                >
+                            <?php else: ?>
                             <div class="mockup mockup--slide" data-lightbox-trigger data-slide-title="<?= htmlspecialchars($t['titulo']) ?>">
                                 <div class="mockup__topbar">
                                     <span class="mockup__dot"></span><span class="mockup__dot"></span><span class="mockup__dot"></span>
@@ -525,11 +542,12 @@ function icon(string $nome, string $classe = ''): string
                                             <div class="schedule-row"><span class="schedule-row__time">09:30</span><span class="schedule-row__name">Igor Peixoto — Barba</span><span class="status-badge status-badge--aguardando">Aguardando</span></div>
                                             <div class="schedule-row"><span class="schedule-row__time">10:00</span><span class="schedule-row__name">Caio Freitas — Corte + Barba</span><span class="status-badge status-badge--confirmado">Confirmado</span></div>
                                         </div>
-                                    <?php elseif ($t['mockup'] === 'financeiro'): ?>
-                                        <div class="finance-grid">
-                                            <div class="card card--surface2 finance-card"><span class="finance-card__label">Receitas</span><span class="finance-card__value finance-card__value--positive">R$ 6.420</span></div>
-                                            <div class="card card--surface2 finance-card"><span class="finance-card__label">Despesas</span><span class="finance-card__value finance-card__value--neutral">R$ 1.180</span></div>
-                                            <div class="card card--surface2 finance-card"><span class="finance-card__label">Saldo</span><span class="finance-card__value finance-card__value--warning">R$ 5.240</span></div>
+                                    <?php elseif ($t['mockup'] === 'clientes'): ?>
+                                        <div class="mockup__list">
+                                            <div class="schedule-row"><span class="schedule-row__name">Marcos Souza</span><span class="status-badge status-badge--confirmado">Ativo</span></div>
+                                            <div class="schedule-row"><span class="schedule-row__name">Igor Peixoto</span><span class="status-badge status-badge--confirmado">Ativo</span></div>
+                                            <div class="schedule-row"><span class="schedule-row__name">Caio Freitas</span><span class="status-badge status-badge--confirmado">Ativo</span></div>
+                                            <div class="schedule-row"><span class="schedule-row__name">Renato Fonseca</span><span class="status-badge status-badge--aguardando">Inativo</span></div>
                                         </div>
                                     <?php elseif ($t['mockup'] === 'fiados'): ?>
                                         <div class="mockup__list">
@@ -550,6 +568,7 @@ function icon(string $nome, string $classe = ''): string
                                     <?php endif; ?>
                                 </div>
                             </div>
+                            <?php endif; ?>
                             <figcaption class="carousel__caption"><?= htmlspecialchars($t['legenda']) ?></figcaption>
                         </figure>
                         <?php endforeach; ?>
@@ -577,7 +596,8 @@ function icon(string $nome, string $classe = ''): string
         <div class="lightbox" data-lightbox role="dialog" aria-modal="true" aria-label="Visualização ampliada da tela">
             <button type="button" class="lightbox__close" data-lightbox-close aria-label="Fechar visualização"><?= icon('x') ?></button>
             <div class="lightbox__content">
-                <div class="card" style="padding:var(--space-7); text-align:center;">
+                <img class="lightbox__img" data-lightbox-img alt="" hidden>
+                <div class="card" style="padding:var(--space-7); text-align:center;" data-lightbox-placeholder>
                     <p style="color:var(--white); font-weight:600;" data-lightbox-title>Tela do sistema</p>
                     <p style="margin-top:8px;">Prévia ampliada — capturas reais serão adicionadas em breve.</p>
                 </div>
@@ -694,16 +714,27 @@ function icon(string $nome, string $classe = ''): string
                     </div>
                 </div>
                 <div class="online-booking__visual">
-                    <div class="booking-phone" style="max-width:260px;">
-                        <div class="booking-phone__screen">
-                            <div class="booking-phone__header">Escolha o horário</div>
-                            <div class="booking-phone__slot">09:00</div>
-                            <div class="booking-phone__slot booking-phone__slot--selected">09:30</div>
-                            <div class="booking-phone__slot">10:00</div>
-                            <div class="booking-phone__slot">10:30</div>
-                            <div class="booking-phone__btn">Confirmar agendamento</div>
+                    <?php $caminhoAgendaOnline02 = __DIR__ . '/assets/images/barberp/agenda-online02.png'; ?>
+                    <?php if (file_exists($caminhoAgendaOnline02)): ?>
+                        <img
+                            src="/assets/images/barberp/agenda-online02.png"
+                            alt="Tela da agenda online do BarbERP, onde o cliente escolhe o barbeiro e o horário sozinho."
+                            loading="lazy"
+                            decoding="async"
+                            class="online-booking__photo"
+                        >
+                    <?php else: ?>
+                        <div class="booking-phone" style="max-width:260px;">
+                            <div class="booking-phone__screen">
+                                <div class="booking-phone__header">Escolha o horário</div>
+                                <div class="booking-phone__slot">09:00</div>
+                                <div class="booking-phone__slot booking-phone__slot--selected">09:30</div>
+                                <div class="booking-phone__slot">10:00</div>
+                                <div class="booking-phone__slot">10:30</div>
+                                <div class="booking-phone__btn">Confirmar agendamento</div>
+                            </div>
                         </div>
-                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
