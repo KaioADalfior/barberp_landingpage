@@ -791,16 +791,27 @@ function icon(string $nome, string $classe = ''): string
                     </div>
                 </div>
                 <div class="online-booking__visual">
-                    <div class="booking-phone" style="max-width:260px;">
-                        <div class="booking-phone__screen">
-                            <div class="booking-phone__header">Escolha o horário</div>
-                            <div class="booking-phone__slot">09:00</div>
-                            <div class="booking-phone__slot booking-phone__slot--selected">09:30</div>
-                            <div class="booking-phone__slot">10:00</div>
-                            <div class="booking-phone__slot">10:30</div>
-                            <div class="booking-phone__btn">Confirmar agendamento</div>
+                    <?php $fotoAgendaLink = fotoReal(['agenda_link01.png', 'agenda-link01.png']); ?>
+                    <?php if ($fotoAgendaLink !== null): ?>
+                        <img
+                            src="/<?= htmlspecialchars($fotoAgendaLink) ?>"
+                            alt="Tela de agendamento online do BarbERP, onde o cliente escolhe a data e o horário"
+                            loading="lazy"
+                            decoding="async"
+                            class="online-booking__photo"
+                        >
+                    <?php else: ?>
+                        <div class="booking-phone" style="max-width:260px;">
+                            <div class="booking-phone__screen">
+                                <div class="booking-phone__header">Escolha o horário</div>
+                                <div class="booking-phone__slot">09:00</div>
+                                <div class="booking-phone__slot booking-phone__slot--selected">09:30</div>
+                                <div class="booking-phone__slot">10:00</div>
+                                <div class="booking-phone__slot">10:30</div>
+                                <div class="booking-phone__btn">Confirmar agendamento</div>
+                            </div>
                         </div>
-                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
