@@ -412,7 +412,7 @@ function icon(string $nome, string $classe = ''): string
             </div>
 
             <div class="hero__visual reveal">
-                <?php $fotoDashboard = fotoReal(['dashboard.png', 'dashboard_principal.png']); ?>
+                <?php $fotoDashboard = fotoReal(['dashboar_principal.png', 'dashboard_principal.png']); ?>
                 <?php if ($fotoDashboard !== null): ?>
                     <div class="mockup mockup--photo">
                         <img
