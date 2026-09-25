@@ -717,7 +717,7 @@ function icon(string $nome, string $classe = ''): string
             </div>
 
             <?php
-                $fotoFinanceiro    = fotoReal(['financeiro.png', 'dashboard_fin.png']);
+                $fotoFinanceiro    = fotoReal(['dashboard_fin.png', 'dashboard_fin.png']);
                 $fotoFiados        = fotoReal(['fiados.png', 'receber_fiado.png']);
                 $temFotoFinanceiro = $fotoFinanceiro !== null;
                 $temFotoFiados     = $fotoFiados !== null;
