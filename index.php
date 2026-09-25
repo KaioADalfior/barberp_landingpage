@@ -11,8 +11,10 @@
  * O conteúdo abaixo reflete apenas funcionalidades reais do sistema.
  * As telas do carrossel são mockups elegantes em CSS/HTML — quando as
  * capturas reais chegarem, basta colocá-las em assets/images/barberp/
- * (dashboard.png, agendamentos.png, financeiro.png, fiados.png,
- * agenda-online.png) e trocar os blocos marcados "MOCKUP" pelas tags <img>.
+ * (dashboard.png, agendamentos.png, clientes.png, agenda-online01.png,
+ * agenda-online02.png para o carrossel; financeiro.png e fiados.png para
+ * a seção "Financeiro") e o PHP troca o mockup pela foto sozinho — ver
+ * file_exists() em cada seção.
  */
 
 declare(strict_types=1);
@@ -100,18 +102,18 @@ $telas = [
         'mockup'   => 'clientes',
     ],
     [
-        'id'       => 'fiados-tela',
-        'titulo'   => 'Controle de Fiados',
-        'legenda'  => 'Quem deve, quanto deve, e a baixa com um clique.',
-        'imagem'   => 'assets/images/barberp/fiados.png',
-        'mockup'   => 'fiados',
-    ],
-    [
         'id'       => 'agenda-online-tela',
         'titulo'   => 'Agenda Online',
         'legenda'  => 'Cliente escolhe o horário pelo celular, sem precisar ligar.',
         'imagem'   => 'assets/images/barberp/agenda-online01.png',
         'mockup'   => 'agenda-online',
+    ],
+    [
+        'id'       => 'agenda-online-confirmacao-tela',
+        'titulo'   => 'Confirmação',
+        'legenda'  => 'Confirmação automática, sem trocar mensagem com o cliente.',
+        'imagem'   => 'assets/images/barberp/agenda-online02.png',
+        'mockup'   => 'agenda-online-confirmacao',
     ],
 ];
 
@@ -295,6 +297,10 @@ function icon(string $nome, string $classe = ''): string
 <meta property="og:description" content="Clientes, agendamentos recorrentes, fiados e financeiro em um só lugar. Conheça o BarbERP e teste gratuitamente.">
 <meta property="og:site_name" content="BarbERP">
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap">
+
 <link rel="preconnect" href="/">
 <link rel="stylesheet" href="/assets/css/style.css">
 
@@ -389,41 +395,59 @@ function icon(string $nome, string $classe = ''): string
             </div>
 
             <div class="hero__visual reveal">
-                <div class="mockup" role="img" aria-label="Ilustração do painel do BarbERP mostrando atendimentos do dia, faturamento e agenda">
-                    <div class="mockup__topbar">
-                        <span class="mockup__dot"></span><span class="mockup__dot"></span><span class="mockup__dot"></span>
+                <?php $caminhoDashboardReal = __DIR__ . '/assets/images/barberp/dashboard.png'; ?>
+                <?php if (file_exists($caminhoDashboardReal)): ?>
+                    <div class="mockup mockup--photo">
+                        <img
+                            src="/assets/images/barberp/dashboard.png"
+                            alt="Painel do BarbERP mostrando atendimentos do dia, faturamento e agenda"
+                            loading="eager"
+                            decoding="async"
+                        >
                     </div>
-                    <div class="mockup__body">
-                        <div class="mockup__sidebar">
-                            <span class="mockup__sidebar-icon mockup__sidebar-icon--active"></span>
-                            <span class="mockup__sidebar-icon"></span>
-                            <span class="mockup__sidebar-icon"></span>
-                            <span class="mockup__sidebar-icon"></span>
-                            <span class="mockup__sidebar-icon"></span>
+                    <span class="mockup__floating mockup__floating--1">
+                        <?= icon('trend-up') ?> +18% neste mês
+                    </span>
+                    <span class="mockup__floating mockup__floating--2">
+                        <?= icon('check') ?> Horário confirmado
+                    </span>
+                <?php else: ?>
+                    <div class="mockup" role="img" aria-label="Ilustração do painel do BarbERP mostrando atendimentos do dia, faturamento e agenda">
+                        <div class="mockup__topbar">
+                            <span class="mockup__dot"></span><span class="mockup__dot"></span><span class="mockup__dot"></span>
                         </div>
-                        <div class="mockup__content">
-                            <div class="mockup__row">
-                                <div class="mockup__stat">
-                                    <div class="mockup__stat-label">ATENDIMENTOS HOJE</div>
-                                    <div class="mockup__stat-value">12</div>
-                                </div>
-                                <div class="mockup__stat">
-                                    <div class="mockup__stat-label">FATURAMENTO DO DIA</div>
-                                    <div class="mockup__stat-value mockup__stat-value--accent">R$ 640</div>
-                                </div>
-                                <div class="mockup__stat">
-                                    <div class="mockup__stat-label">A RECEBER</div>
-                                    <div class="mockup__stat-value">R$ 180</div>
-                                </div>
+                        <div class="mockup__body">
+                            <div class="mockup__sidebar">
+                                <span class="mockup__sidebar-icon mockup__sidebar-icon--active"></span>
+                                <span class="mockup__sidebar-icon"></span>
+                                <span class="mockup__sidebar-icon"></span>
+                                <span class="mockup__sidebar-icon"></span>
+                                <span class="mockup__sidebar-icon"></span>
                             </div>
-                            <div class="mockup__chart" aria-hidden="true">
-                                <span style="height:40%"></span><span style="height:65%"></span><span style="height:50%"></span>
-                                <span style="height:80%"></span><span style="height:55%"></span><span style="height:70%"></span>
-                                <span style="height:45%"></span>
-                            </div>
-                            <div class="mockup__list">
-                                <div class="mockup__list-row"><span>14:00 — Corte + Barba</span><span>Confirmado</span></div>
-                                <div class="mockup__list-row"><span>14:30 — Corte</span><span>Aguardando</span></div>
+                            <div class="mockup__content">
+                                <div class="mockup__row">
+                                    <div class="mockup__stat">
+                                        <div class="mockup__stat-label">ATENDIMENTOS HOJE</div>
+                                        <div class="mockup__stat-value">12</div>
+                                    </div>
+                                    <div class="mockup__stat">
+                                        <div class="mockup__stat-label">FATURAMENTO DO DIA</div>
+                                        <div class="mockup__stat-value mockup__stat-value--accent">R$ 640</div>
+                                    </div>
+                                    <div class="mockup__stat">
+                                        <div class="mockup__stat-label">A RECEBER</div>
+                                        <div class="mockup__stat-value">R$ 180</div>
+                                    </div>
+                                </div>
+                                <div class="mockup__chart" aria-hidden="true">
+                                    <span style="height:40%"></span><span style="height:65%"></span><span style="height:50%"></span>
+                                    <span style="height:80%"></span><span style="height:55%"></span><span style="height:70%"></span>
+                                    <span style="height:45%"></span>
+                                </div>
+                                <div class="mockup__list">
+                                    <div class="mockup__list-row"><span>14:00 — Corte + Barba</span><span>Confirmado</span></div>
+                                    <div class="mockup__list-row"><span>14:30 — Corte</span><span>Aguardando</span></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -433,7 +457,7 @@ function icon(string $nome, string $classe = ''): string
                     <span class="mockup__floating mockup__floating--2">
                         <?= icon('check') ?> Horário confirmado
                     </span>
-                </div>
+                <?php endif; ?>
             </div>
         </div>
     </section>
@@ -443,7 +467,7 @@ function icon(string $nome, string $classe = ''): string
         <div class="container split">
             <div class="split__col split__col--problema reveal">
                 <span class="badge">O dia a dia sem organização</span>
-                <h3>Agenda no caderno, fiado de cabeça e financeiro na planilha.</h3>
+                <h2>Agenda no caderno, fiado de cabeça e financeiro na planilha.</h2>
                 <ul class="split__list">
                     <li><?= icon('x') ?> Cliente esquecido, horário duplicado ou marcado errado.</li>
                     <li><?= icon('x') ?> Fiado que ninguém lembra quem já pagou.</li>
@@ -453,7 +477,7 @@ function icon(string $nome, string $classe = ''): string
             </div>
             <div class="split__col split__col--solucao reveal">
                 <span class="badge badge--highlight">Com o BarbERP</span>
-                <h3>Organize sua agenda. Controle seus fiados. Veja o financeiro em tempo real.</h3>
+                <h2>Organize sua agenda. Controle seus fiados. Veja o financeiro em tempo real.</h2>
                 <ul class="split__list">
                     <li><?= icon('check') ?> Agenda por barbeiro, com recorrência automática.</li>
                     <li><?= icon('check') ?> Fiados registrados e com baixa em um clique.</li>
@@ -507,7 +531,7 @@ function icon(string $nome, string $classe = ''): string
                             $caminhoImagemReal = __DIR__ . '/' . $t['imagem'];
                             $temImagemReal = file_exists($caminhoImagemReal);
                         ?>
-                        <figure class="carousel__slide" role="group" aria-roledescription="slide" aria-label="<?= $i + 1 ?> de <?= count($telas) ?>: <?= htmlspecialchars($t['titulo']) ?>">
+                        <figure class="carousel__slide" aria-roledescription="slide" aria-label="<?= $i + 1 ?> de <?= count($telas) ?>: <?= htmlspecialchars($t['titulo']) ?>">
                             <?php if ($temImagemReal): ?>
                                 <img
                                     src="/<?= htmlspecialchars($t['imagem']) ?>"
@@ -549,13 +573,7 @@ function icon(string $nome, string $classe = ''): string
                                             <div class="schedule-row"><span class="schedule-row__name">Caio Freitas</span><span class="status-badge status-badge--confirmado">Ativo</span></div>
                                             <div class="schedule-row"><span class="schedule-row__name">Renato Fonseca</span><span class="status-badge status-badge--aguardando">Inativo</span></div>
                                         </div>
-                                    <?php elseif ($t['mockup'] === 'fiados'): ?>
-                                        <div class="mockup__list">
-                                            <div class="fiado-row"><span class="fiado-row__name">Renato Fonseca</span><span class="fiado-row__value">R$ 45,00</span><span class="status-badge status-badge--aberto">Em aberto</span></div>
-                                            <div class="fiado-row"><span class="fiado-row__name">Vitor Araújo</span><span class="fiado-row__value">R$ 30,00</span><span class="status-badge status-badge--pago">Pago</span></div>
-                                            <div class="fiado-row"><span class="fiado-row__name">Diego Rocha</span><span class="fiado-row__value">R$ 60,00</span><span class="status-badge status-badge--aberto">Em aberto</span></div>
-                                        </div>
-                                    <?php else: ?>
+                                    <?php elseif ($t['mockup'] === 'agenda-online'): ?>
                                         <div class="booking-phone">
                                             <div class="booking-phone__screen">
                                                 <div class="booking-phone__header">Agendar horário</div>
@@ -563,6 +581,15 @@ function icon(string $nome, string $classe = ''): string
                                                 <div class="booking-phone__slot booking-phone__slot--selected">09:30</div>
                                                 <div class="booking-phone__slot">10:00</div>
                                                 <div class="booking-phone__btn">Confirmar agendamento</div>
+                                            </div>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="booking-phone">
+                                            <div class="booking-phone__screen">
+                                                <div class="booking-phone__header">Agendamento confirmado</div>
+                                                <div class="booking-phone__slot booking-phone__slot--selected">09:30 · Corte + Barba</div>
+                                                <span class="status-badge status-badge--confirmado">Confirmado</span>
+                                                <div class="booking-phone__btn">Ver detalhes</div>
                                             </div>
                                         </div>
                                     <?php endif; ?>
@@ -654,29 +681,62 @@ function icon(string $nome, string $classe = ''): string
                 <p class="section-subtitle">Receitas, despesas, valores a receber e fiados, tudo atualizado a cada atendimento.</p>
             </div>
 
-            <div class="finance-grid reveal">
-                <div class="card finance-card">
-                    <span class="finance-card__label">Receitas</span>
-                    <span class="finance-card__value finance-card__value--positive">R$ 6.420,00</span>
+            <?php
+                $caminhoFinanceiroFoto = __DIR__ . '/assets/images/barberp/financeiro.png';
+                $caminhoFiadosFoto     = __DIR__ . '/assets/images/barberp/fiados.png';
+                $temFotoFinanceiro     = file_exists($caminhoFinanceiroFoto);
+                $temFotoFiados         = file_exists($caminhoFiadosFoto);
+            ?>
+            <?php if ($temFotoFinanceiro || $temFotoFiados): ?>
+                <div class="finance-gallery reveal">
+                    <?php if ($temFotoFinanceiro): ?>
+                    <figure class="finance-gallery__item">
+                        <img
+                            src="/assets/images/barberp/financeiro.png"
+                            alt="Dashboard financeiro do BarbERP, com entradas, saídas e formas de pagamento"
+                            loading="lazy"
+                            decoding="async"
+                        >
+                        <figcaption>Dashboard financeiro</figcaption>
+                    </figure>
+                    <?php endif; ?>
+                    <?php if ($temFotoFiados): ?>
+                    <figure class="finance-gallery__item">
+                        <img
+                            src="/assets/images/barberp/fiados.png"
+                            alt="Tela de contas a receber do BarbERP, com o recebimento de um fiado em aberto"
+                            loading="lazy"
+                            decoding="async"
+                        >
+                        <figcaption>Controle de Fiados</figcaption>
+                    </figure>
+                    <?php endif; ?>
                 </div>
-                <div class="card finance-card">
-                    <span class="finance-card__label">Despesas</span>
-                    <span class="finance-card__value finance-card__value--neutral">R$ 1.180,00</span>
+            <?php else: ?>
+                <div class="finance-grid reveal">
+                    <div class="card finance-card">
+                        <span class="finance-card__label">Receitas</span>
+                        <span class="finance-card__value finance-card__value--positive">R$ 6.420,00</span>
+                    </div>
+                    <div class="card finance-card">
+                        <span class="finance-card__label">Despesas</span>
+                        <span class="finance-card__value finance-card__value--neutral">R$ 1.180,00</span>
+                    </div>
+                    <div class="card finance-card">
+                        <span class="finance-card__label">A receber</span>
+                        <span class="finance-card__value finance-card__value--warning">R$ 340,00</span>
+                    </div>
+                    <div class="card finance-card">
+                        <span class="finance-card__label">Fiados</span>
+                        <span class="finance-card__value finance-card__value--warning">R$ 105,00</span>
+                    </div>
+                    <div class="card finance-card">
+                        <span class="finance-card__label">Saldo</span>
+                        <span class="finance-card__value finance-card__value--positive">R$ 5.240,00</span>
+                    </div>
                 </div>
-                <div class="card finance-card">
-                    <span class="finance-card__label">A receber</span>
-                    <span class="finance-card__value finance-card__value--warning">R$ 340,00</span>
-                </div>
-                <div class="card finance-card">
-                    <span class="finance-card__label">Fiados</span>
-                    <span class="finance-card__value finance-card__value--warning">R$ 105,00</span>
-                </div>
-                <div class="card finance-card">
-                    <span class="finance-card__label">Saldo</span>
-                    <span class="finance-card__value finance-card__value--positive">R$ 5.240,00</span>
-                </div>
-            </div>
-            <p class="text-center" style="margin-top:var(--space-5); font-size:var(--fs-xs);">Valores meramente ilustrativos, para representar as informações exibidas no painel financeiro.</p>
+                <p class="text-center" style="margin-top:var(--space-5); font-size:var(--fs-xs);">Valores meramente ilustrativos, para representar as informações exibidas no painel financeiro.</p>
+            <?php endif; ?>
         </div>
     </section>
 
@@ -714,27 +774,16 @@ function icon(string $nome, string $classe = ''): string
                     </div>
                 </div>
                 <div class="online-booking__visual">
-                    <?php $caminhoAgendaOnline02 = __DIR__ . '/assets/images/barberp/agenda-online02.png'; ?>
-                    <?php if (file_exists($caminhoAgendaOnline02)): ?>
-                        <img
-                            src="/assets/images/barberp/agenda-online02.png"
-                            alt="Tela da agenda online do BarbERP, onde o cliente escolhe o barbeiro e o horário sozinho."
-                            loading="lazy"
-                            decoding="async"
-                            class="online-booking__photo"
-                        >
-                    <?php else: ?>
-                        <div class="booking-phone" style="max-width:260px;">
-                            <div class="booking-phone__screen">
-                                <div class="booking-phone__header">Escolha o horário</div>
-                                <div class="booking-phone__slot">09:00</div>
-                                <div class="booking-phone__slot booking-phone__slot--selected">09:30</div>
-                                <div class="booking-phone__slot">10:00</div>
-                                <div class="booking-phone__slot">10:30</div>
-                                <div class="booking-phone__btn">Confirmar agendamento</div>
-                            </div>
+                    <div class="booking-phone" style="max-width:260px;">
+                        <div class="booking-phone__screen">
+                            <div class="booking-phone__header">Escolha o horário</div>
+                            <div class="booking-phone__slot">09:00</div>
+                            <div class="booking-phone__slot booking-phone__slot--selected">09:30</div>
+                            <div class="booking-phone__slot">10:00</div>
+                            <div class="booking-phone__slot">10:30</div>
+                            <div class="booking-phone__btn">Confirmar agendamento</div>
                         </div>
-                    <?php endif; ?>
+                    </div>
                 </div>
             </div>
         </div>

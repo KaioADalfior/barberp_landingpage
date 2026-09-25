@@ -37,7 +37,7 @@
   --overlay: rgba(11, 14, 23, 0.86);
 
   /* Tipografia */
-  --font-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-base: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --fs-xs: 0.8125rem;
   --fs-sm: 0.9375rem;
   --fs-base: 1rem;
@@ -674,6 +674,11 @@ p {
   overflow: hidden;
 }
 
+.mockup--photo img {
+  width: 100%;
+  display: block;
+}
+
 .mockup__topbar {
   display: flex;
   align-items: center;
@@ -839,7 +844,8 @@ p {
   margin-bottom: var(--space-4);
 }
 
-.split__col h3 {
+.split__col h2 {
+  font-size: var(--fs-lg);
   margin-bottom: var(--space-3);
 }
 
@@ -1123,6 +1129,32 @@ p {
 .finance-card__value {
   font-size: var(--fs-xl);
   font-weight: 800;
+}
+
+.finance-gallery {
+  display: grid;
+  gap: var(--space-5);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.finance-gallery__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.finance-gallery__item img {
+  width: 100%;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+}
+
+.finance-gallery__item figcaption {
+  text-align: center;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--white);
 }
 
 .finance-card__value--positive { color: var(--success); }
