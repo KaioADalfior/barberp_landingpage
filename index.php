@@ -395,11 +395,11 @@ function icon(string $nome, string $classe = ''): string
             </div>
 
             <div class="hero__visual reveal">
-                <?php $caminhoDashboardReal = __DIR__ . '/assets/images/barberp/dashboard.png'; ?>
+                <?php $caminhoDashboardReal = __DIR__ . '/assets/images/barberp/dashboard_principal.png'; ?>
                 <?php if (file_exists($caminhoDashboardReal)): ?>
                     <div class="mockup mockup--photo">
                         <img
-                            src="/assets/images/barberp/dashboard.png"
+                            src="/assets/images/barberp/dashboard_principal.png"
                             alt="Painel do BarbERP mostrando atendimentos do dia, faturamento e agenda"
                             loading="eager"
                             decoding="async"
