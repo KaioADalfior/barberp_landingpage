@@ -84,7 +84,7 @@ $telas = [
         'id'       => 'inicio-tela',
         'titulo'   => 'Início',
         'legenda'  => 'Painel do dia: atendimentos, faturamento e agenda em um relance.',
-        'imagem'   => fotoReal(['dashboard.png', 'dashboard_principal.png']),
+        'imagem'   => fotoReal(['dashboard_mobile.png', 'dashboard_mobile.png']),
         'mockup'   => 'inicio',
     ],
     [
