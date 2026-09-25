@@ -84,35 +84,35 @@ $telas = [
         'id'       => 'inicio-tela',
         'titulo'   => 'Início',
         'legenda'  => 'Painel do dia: atendimentos, faturamento e agenda em um relance.',
-        'imagem'   => 'assets/images/barberp/dashboard.png',
+        'imagem'   => fotoReal(['dashboard.png', 'dashboard_principal.png']),
         'mockup'   => 'inicio',
     ],
     [
         'id'       => 'agendamentos-tela',
         'titulo'   => 'Agendamentos',
         'legenda'  => 'Agenda organizada por horário, com status de cada atendimento.',
-        'imagem'   => 'assets/images/barberp/agendamentos.png',
+        'imagem'   => fotoReal(['agendamentos.png']),
         'mockup'   => 'agendamentos',
     ],
     [
         'id'       => 'clientes-tela',
         'titulo'   => 'Clientes',
         'legenda'  => 'Cadastro de cada cliente, com telefone, e-mail e histórico à mão.',
-        'imagem'   => 'assets/images/barberp/clientes.png',
+        'imagem'   => fotoReal(['clientes.png']),
         'mockup'   => 'clientes',
     ],
     [
         'id'       => 'agenda-online-tela',
         'titulo'   => 'Agenda Online',
         'legenda'  => 'Cliente escolhe o horário pelo celular, sem precisar ligar.',
-        'imagem'   => 'assets/images/barberp/agenda-online01.png',
+        'imagem'   => fotoReal(['agenda-online01.png']),
         'mockup'   => 'agenda-online',
     ],
     [
         'id'       => 'agenda-online-confirmacao-tela',
         'titulo'   => 'Confirmação',
         'legenda'  => 'Confirmação automática, sem trocar mensagem com o cliente.',
-        'imagem'   => 'assets/images/barberp/agenda-online02.png',
+        'imagem'   => fotoReal(['agenda-online02.png']),
         'mockup'   => 'agenda-online-confirmacao',
     ],
 ];
@@ -241,6 +241,23 @@ $faqs = [
         'r' => 'Os três planos incluem toda a gestão da barbearia. A diferença está no Agendamento Online e nos lembretes por WhatsApp, disponíveis nos planos superiores.',
     ],
 ];
+
+/* -------------------------------------------------------------------------
+ * Fotos reais do sistema — aceita mais de um nome de arquivo possível para
+ * a mesma foto (ex.: o nome "oficial" e o nome original do print enviado),
+ * assim um arquivo salvo com o nome "errado" continua funcionando em vez
+ * de cair silenciosamente no mockup em CSS.
+ * ---------------------------------------------------------------------- */
+function fotoReal(array $nomesPossiveis): ?string
+{
+    foreach ($nomesPossiveis as $nome) {
+        $caminhoRelativo = 'assets/images/barberp/' . $nome;
+        if (file_exists(__DIR__ . '/' . $caminhoRelativo)) {
+            return $caminhoRelativo;
+        }
+    }
+    return null;
+}
 
 /* -------------------------------------------------------------------------
  * Ícones — SVGs simples, inline, sem dependências externas.
@@ -395,11 +412,11 @@ function icon(string $nome, string $classe = ''): string
             </div>
 
             <div class="hero__visual reveal">
-                <?php $caminhoDashboardReal = __DIR__ . '/assets/images/barberp/dashboard_principal.png'; ?>
-                <?php if (file_exists($caminhoDashboardReal)): ?>
+                <?php $fotoDashboard = fotoReal(['dashboard.png', 'dashboard_principal.png']); ?>
+                <?php if ($fotoDashboard !== null): ?>
                     <div class="mockup mockup--photo">
                         <img
-                            src="/assets/images/barberp/dashboard_principal.png"
+                            src="/<?= htmlspecialchars($fotoDashboard) ?>"
                             alt="Painel do BarbERP mostrando atendimentos do dia, faturamento e agenda"
                             loading="eager"
                             decoding="async"
@@ -526,10 +543,10 @@ function icon(string $nome, string $classe = ''): string
                     <div class="carousel__track" data-carousel-track>
                         <?php foreach ($telas as $i => $t):
                             // Se a captura real já foi adicionada em assets/images/barberp/,
-                            // usa a imagem de verdade. Enquanto não existir, mostra o
-                            // mockup elegante em CSS/HTML como alternativa.
-                            $caminhoImagemReal = __DIR__ . '/' . $t['imagem'];
-                            $temImagemReal = file_exists($caminhoImagemReal);
+                            // usa a imagem de verdade (fotoReal() já resolveu o caminho ao
+                            // montar $telas). Enquanto não existir, mostra o mockup elegante
+                            // em CSS/HTML como alternativa.
+                            $temImagemReal = $t['imagem'] !== null;
                         ?>
                         <figure class="carousel__slide" aria-roledescription="slide" aria-label="<?= $i + 1 ?> de <?= count($telas) ?>: <?= htmlspecialchars($t['titulo']) ?>">
                             <?php if ($temImagemReal): ?>
@@ -682,17 +699,17 @@ function icon(string $nome, string $classe = ''): string
             </div>
 
             <?php
-                $caminhoFinanceiroFoto = __DIR__ . '/assets/images/barberp/financeiro.png';
-                $caminhoFiadosFoto     = __DIR__ . '/assets/images/barberp/fiados.png';
-                $temFotoFinanceiro     = file_exists($caminhoFinanceiroFoto);
-                $temFotoFiados         = file_exists($caminhoFiadosFoto);
+                $fotoFinanceiro    = fotoReal(['financeiro.png', 'dashboard_fin.png']);
+                $fotoFiados        = fotoReal(['fiados.png', 'receber_fiado.png']);
+                $temFotoFinanceiro = $fotoFinanceiro !== null;
+                $temFotoFiados     = $fotoFiados !== null;
             ?>
             <?php if ($temFotoFinanceiro || $temFotoFiados): ?>
                 <div class="finance-gallery reveal">
                     <?php if ($temFotoFinanceiro): ?>
                     <figure class="finance-gallery__item">
                         <img
-                            src="/assets/images/barberp/financeiro.png"
+                            src="/<?= htmlspecialchars($fotoFinanceiro) ?>"
                             alt="Dashboard financeiro do BarbERP, com entradas, saídas e formas de pagamento"
                             loading="lazy"
                             decoding="async"
@@ -703,7 +720,7 @@ function icon(string $nome, string $classe = ''): string
                     <?php if ($temFotoFiados): ?>
                     <figure class="finance-gallery__item">
                         <img
-                            src="/assets/images/barberp/fiados.png"
+                            src="/<?= htmlspecialchars($fotoFiados) ?>"
                             alt="Tela de contas a receber do BarbERP, com o recebimento de um fiado em aberto"
                             loading="lazy"
                             decoding="async"
