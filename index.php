@@ -261,6 +261,20 @@ function fotoReal(array $nomesPossiveis): ?string
 }
 
 /* -------------------------------------------------------------------------
+ * Cache-busting automático para CSS/JS — acrescenta ?v=<data de modificação
+ * do arquivo> em cada link. Assim, toda vez que um desses arquivos for
+ * atualizado no servidor, o navegador do visitante busca a versão nova
+ * sozinho, em vez de continuar usando uma cópia antiga guardada em cache
+ * (o que fazia ajustes de CSS/JS "não aparecerem" mesmo após o deploy).
+ * ---------------------------------------------------------------------- */
+function versaoAsset(string $caminhoRelativo): string
+{
+    $caminhoAbsoluto = __DIR__ . '/' . $caminhoRelativo;
+    $versao = file_exists($caminhoAbsoluto) ? (string) filemtime($caminhoAbsoluto) : '1';
+    return '/' . $caminhoRelativo . '?v=' . $versao;
+}
+
+/* -------------------------------------------------------------------------
  * Ícones — SVGs simples, inline, sem dependências externas.
  * ---------------------------------------------------------------------- */
 function icon(string $nome, string $classe = ''): string
@@ -322,7 +336,7 @@ function icon(string $nome, string $classe = ''): string
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap">
 
 <link rel="preconnect" href="/">
-<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="stylesheet" href="<?= htmlspecialchars(versaoAsset('assets/css/style.css')) ?>">
 
 <!-- Sem JavaScript: menu mobile fica sempre visível (não há como abrir o
      painel), o FAQ mostra todas as respostas abertas, e o carrossel vira
@@ -1044,9 +1058,9 @@ function icon(string $nome, string $classe = ''): string
     </div>
 </footer>
 
-<script src="/assets/js/main.js" defer></script>
-<script src="/assets/js/carousel.js" defer></script>
-<script src="/assets/js/faq.js" defer></script>
-<script src="/assets/js/form.js" defer></script>
+<script src="<?= htmlspecialchars(versaoAsset('assets/js/main.js')) ?>" defer></script>
+<script src="<?= htmlspecialchars(versaoAsset('assets/js/carousel.js')) ?>" defer></script>
+<script src="<?= htmlspecialchars(versaoAsset('assets/js/faq.js')) ?>" defer></script>
+<script src="<?= htmlspecialchars(versaoAsset('assets/js/form.js')) ?>" defer></script>
 </body>
 </html>

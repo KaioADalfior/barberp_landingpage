@@ -89,7 +89,7 @@ try {
 
 try {
     $stmt = $pdo->prepare(
-        'INSERT INTO Lead (nome_completo, telefone, email, descricao, plano_interesse)
+        'INSERT INTO `Lead` (nome_completo, telefone, email, descricao, plano_interesse)
          VALUES (:nome_completo, :telefone, :email, :descricao, :plano_interesse)'
     );
     $stmt->execute([
