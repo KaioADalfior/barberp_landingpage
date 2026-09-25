@@ -8,7 +8,7 @@
 
 USE leads_app_barber;
 
-CREATE TABLE IF NOT EXISTS Lead (
+CREATE TABLE IF NOT EXISTS `Lead` (
     idLead          INT AUTO_INCREMENT PRIMARY KEY,
     nome_completo   VARCHAR(150) NOT NULL,
     telefone        VARCHAR(20)  NOT NULL,
