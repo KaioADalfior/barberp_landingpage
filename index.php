@@ -84,7 +84,7 @@ $telas = [
         'id'       => 'inicio-tela',
         'titulo'   => 'Início',
         'legenda'  => 'Painel do dia: atendimentos, faturamento e agenda em um relance.',
-        'imagem'   => fotoReal(['dashboard_mobile.png', 'dashboard_mobile.png']),
+        'imagem'   => fotoReal(['dashboard.png', 'dashboard_principal.png']),
         'mockup'   => 'inicio',
     ],
     [
@@ -717,7 +717,7 @@ function icon(string $nome, string $classe = ''): string
             </div>
 
             <?php
-                $fotoFinanceiro    = fotoReal(['dashboard_fin.png', 'dashboard_fin.png']);
+                $fotoFinanceiro    = fotoReal(['financeiro.png', 'dashboard_fin.png']);
                 $fotoFiados        = fotoReal(['fiados.png', 'receber_fiado.png']);
                 $temFotoFinanceiro = $fotoFinanceiro !== null;
                 $temFotoFiados     = $fotoFiados !== null;
@@ -802,7 +802,7 @@ function icon(string $nome, string $classe = ''): string
                     <span class="section-eyebrow">Agendamento online</span>
                     <h2 class="section-title">Seus clientes marcam o próprio horário.</h2>
                     <p class="section-subtitle">Compartilhe um link — no WhatsApp, no Instagram ou onde preferir — e o cliente escolhe o barbeiro e o horário sozinho, sem precisar ligar.</p>
-                    <a href="#teste-gratuito" class="btn btn--primary" data-cta-plano="Gestão + Agendamento Online">Quero oferecer agendamento online</a>
+                    <a href="#teste-gratuito" class="btn btn--primary btn--block" data-cta-plano="Gestão + Agendamento Online">Quero oferecer agendamento online</a>
                     <div class="online-booking__note">
                         <?= icon('shield') ?>
                         <span>Disponível a partir do plano Gestão + Agendamento Online.</span>
