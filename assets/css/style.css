@@ -875,12 +875,15 @@ p {
    10. Funcionalidades
    ------------------------------------------------------------------------- */
 .features-grid {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: var(--space-5);
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }
 
 .feature-card {
+  flex: 1 1 260px;
+  max-width: 300px;
   position: relative;
   text-align: center;
   display: flex;
