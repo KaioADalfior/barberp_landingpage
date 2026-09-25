@@ -180,7 +180,8 @@ $planos = [
             'Lembretes de agendamento via WhatsApp',
             'Confirmações automáticas via WhatsApp',
         ],
-        'destaque' => false,
+        'destaque'         => false,
+        'emDesenvolvimento' => true,
     ],
 ];
 
@@ -238,7 +239,7 @@ $faqs = [
     ],
     [
         'p' => 'O que muda entre os planos?',
-        'r' => 'Os três planos incluem toda a gestão da barbearia. A diferença está no Agendamento Online e nos lembretes por WhatsApp, disponíveis nos planos superiores.',
+        'r' => 'Os três planos incluem toda a gestão da barbearia. A diferença está no Agendamento Online, disponível a partir do plano intermediário. Os lembretes por WhatsApp ainda estão em desenvolvimento e serão liberados em breve.',
     ],
 ];
 
@@ -290,6 +291,8 @@ function icon(string $nome, string $classe = ''): string
         'chevron'     => '<path d="M9 6l7 6-7 6"/>',
         'plus'        => '<path d="M12 5v14M5 12h14"/>',
         'trend-up'    => '<path d="M3.5 16.5 10 10l4 4 6.5-6.5"/><path d="M15 7.5h5.5V13"/>',
+        'instagram'   => '<rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="0.6" fill="currentColor" stroke="none"/>',
+        'whatsapp'    => '<path d="M20.5 11.5a8.5 8.5 0 0 1-12.4 7.5L4 20l1.1-4a8.5 8.5 0 1 1 15.4-4.5Z"/><path d="M9 9.2c.2-.6.5-.6.8-.6.2 0 .4 0 .6.4.2.5.6 1.4.6 1.6 0 .1 0 .3-.1.4-.2.3-.4.5-.6.7-.1.2-.3.3 0 .6.4.6 1 1.2 1.6 1.6.6.4 1 .6 1.3.7.2.1.4.1.5-.1.2-.2.6-.7.8-.9.2-.2.3-.2.5-.1.2.1 1.4.6 1.6.8.2.1.3.2.3.3 0 .2 0 .7-.3 1.1-.3.4-1.2.8-1.7.8s-1.4-.1-2.9-1c-2.2-1.3-3.6-3.5-3.7-3.7-.1-.2-.9-1.2-.9-2.1 0-.9.5-1.3.7-1.5Z"/>',
     ];
 
     $miolo = $paths[$nome] ?? $paths['check'];
@@ -555,6 +558,7 @@ function icon(string $nome, string $classe = ''): string
                                     alt="Captura de tela do BarbERP — <?= htmlspecialchars($t['titulo']) ?>: <?= htmlspecialchars($t['legenda']) ?>"
                                     loading="lazy"
                                     decoding="async"
+                                    draggable="false"
                                     data-lightbox-trigger
                                     data-slide-title="<?= htmlspecialchars($t['titulo']) ?>"
                                     data-slide-src="/<?= htmlspecialchars($t['imagem']) ?>"
@@ -678,7 +682,7 @@ function icon(string $nome, string $classe = ''): string
                 <div class="card agenda-card reveal">
                     <div class="agenda-card__icon"><?= icon('clock') ?></div>
                     <h3>Lista de espera</h3>
-                    <p>Quando um horário lota, o cliente entra na lista de espera e é avisado se uma vaga abrir.</p>
+                    <p>Quando um horário lota, o cliente entra na lista de espera e o barbeiro recebe um lembrete caso uma vaga abra.</p>
                 </div>
                 <div class="card agenda-card reveal">
                     <div class="agenda-card__icon"><?= icon('calendar') ?></div>
@@ -787,7 +791,7 @@ function icon(string $nome, string $classe = ''): string
                     <a href="#teste-gratuito" class="btn btn--primary" data-cta-plano="Gestão + Agendamento Online">Quero oferecer agendamento online</a>
                     <div class="online-booking__note">
                         <?= icon('shield') ?>
-                        <span>Disponível nos planos Gestão + Agendamento Online e Gestão + Agendamento + WhatsApp.</span>
+                        <span>Disponível a partir do plano Gestão + Agendamento Online.</span>
                     </div>
                 </div>
                 <div class="online-booking__visual">
@@ -827,10 +831,12 @@ function icon(string $nome, string $classe = ''): string
             </div>
 
             <div class="plans-grid">
-                <?php foreach ($planos as $p): ?>
-                <div class="card plan-card<?= $p['destaque'] ? ' plan-card--featured' : '' ?> reveal">
+                <?php foreach ($planos as $p): $emDesenvolvimento = !empty($p['emDesenvolvimento']); ?>
+                <div class="card plan-card<?= $p['destaque'] ? ' plan-card--featured' : '' ?><?= $emDesenvolvimento ? ' plan-card--em-breve' : '' ?> reveal">
                     <?php if (!empty($p['badge'])): ?>
                         <span class="badge badge--highlight plan-card__badge"><?= htmlspecialchars($p['badge']) ?></span>
+                    <?php elseif ($emDesenvolvimento): ?>
+                        <span class="badge plan-card__badge">Em desenvolvimento</span>
                     <?php endif; ?>
                     <h3 class="plan-card__name"><?= htmlspecialchars($p['nome']) ?></h3>
                     <p class="plan-card__desc"><?= htmlspecialchars($p['desc']) ?></p>
@@ -843,7 +849,12 @@ function icon(string $nome, string $classe = ''): string
                         <li><?= icon('check') ?><span><?= htmlspecialchars($item) ?></span></li>
                         <?php endforeach; ?>
                     </ul>
-                    <a href="#teste-gratuito" class="btn <?= $p['destaque'] ? 'btn--primary' : 'btn--secondary' ?> btn--block" data-cta-plano="<?= htmlspecialchars($p['nome']) ?>">Quero este plano</a>
+                    <?php if ($emDesenvolvimento): ?>
+                        <button type="button" class="btn btn--secondary btn--block" disabled aria-disabled="true">Em breve</button>
+                        <p class="plan-card__note">Este plano ainda está em desenvolvimento e não está disponível para contratação.</p>
+                    <?php else: ?>
+                        <a href="#teste-gratuito" class="btn <?= $p['destaque'] ? 'btn--primary' : 'btn--secondary' ?> btn--block" data-cta-plano="<?= htmlspecialchars($p['nome']) ?>">Quero este plano</a>
+                    <?php endif; ?>
                 </div>
                 <?php endforeach; ?>
             </div>
@@ -856,7 +867,7 @@ function icon(string $nome, string $classe = ''): string
                             <th scope="col">Funcionalidade</th>
                             <th scope="col">Gestão</th>
                             <th scope="col">Gestão + Online</th>
-                            <th scope="col">Gestão + Online + WhatsApp</th>
+                            <th scope="col">Gestão + Online + WhatsApp<br><span class="badge" style="font-size:10px; margin-top:4px;">Em desenvolvimento</span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1015,6 +1026,14 @@ function icon(string $nome, string $classe = ''): string
                 <h3 class="footer__col-title">BarbERP</h3>
                 <nav class="footer__links" aria-label="Links institucionais">
                     <a href="#inicio">Início</a>
+                </nav>
+            </div>
+
+            <div class="footer__col">
+                <h3 class="footer__col-title">Contato</h3>
+                <nav class="footer__links" aria-label="Contato da DAK Soluções Digitais">
+                    <a href="https://www.instagram.com/daksolucoes.oficial" target="_blank" rel="noopener noreferrer"><?= icon('instagram') ?> @daksolucoes.oficial</a>
+                    <a href="https://wa.me/5528999430511" target="_blank" rel="noopener noreferrer"><?= icon('whatsapp') ?> (28) 99943-0511</a>
                 </nav>
             </div>
         </div>

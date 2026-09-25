@@ -134,14 +134,27 @@
      * ------------------------------------------------------------- */
     var lightbox = document.querySelector('[data-lightbox]');
     var lightboxTitulo = lightbox ? lightbox.querySelector('[data-lightbox-title]') : null;
+    var lightboxImg = lightbox ? lightbox.querySelector('[data-lightbox-img]') : null;
+    var lightboxPlaceholder = lightbox ? lightbox.querySelector('[data-lightbox-placeholder]') : null;
     var botaoFecharLightbox = lightbox ? lightbox.querySelector('[data-lightbox-close]') : null;
     var ultimoFocoAntesLightbox = null;
 
-    function abrirLightbox(titulo) {
+    function abrirLightbox(titulo, srcImagem) {
         if (!lightbox) { return; }
-        if (lightboxTitulo) {
-            lightboxTitulo.textContent = titulo;
+
+        // Se a tela já tem uma captura real (data-slide-src), mostra a
+        // imagem ampliada; caso contrário, mantém o card explicativo.
+        if (srcImagem && lightboxImg) {
+            lightboxImg.src = srcImagem;
+            lightboxImg.alt = titulo;
+            lightboxImg.hidden = false;
+            if (lightboxPlaceholder) { lightboxPlaceholder.hidden = true; }
+        } else {
+            if (lightboxImg) { lightboxImg.hidden = true; lightboxImg.removeAttribute('src'); }
+            if (lightboxPlaceholder) { lightboxPlaceholder.hidden = false; }
+            if (lightboxTitulo) { lightboxTitulo.textContent = titulo; }
         }
+
         ultimoFocoAntesLightbox = document.activeElement;
         lightbox.classList.add('is-open');
         pararAutoplay();
@@ -164,15 +177,27 @@
         gatilho.setAttribute('tabindex', '0');
         gatilho.setAttribute('role', 'button');
         var titulo = gatilho.getAttribute('data-slide-title') || 'Tela do sistema';
+        var srcImagem = gatilho.getAttribute('data-slide-src');
         gatilho.setAttribute('aria-label', 'Ampliar tela: ' + titulo);
 
+        // Em algumas fotos reais (elemento <img>), o navegador pode tentar
+        // iniciar o "arraste nativo" da imagem (aquele efeito de arrastar
+        // para copiar/salvar) em vez de disparar o clique — isso faz a foto
+        // real parecer que "não abre a prévia", diferente do mockup em CSS
+        // (que é uma <div> e nunca tem esse comportamento nativo). Bloqueia
+        // esse arraste nativo explicitamente, além do draggable="false" e do
+        // CSS, como garantia extra em navegadores mais antigos/diferentes.
+        gatilho.addEventListener('dragstart', function (evento) {
+            evento.preventDefault();
+        });
+
         gatilho.addEventListener('click', function () {
-            abrirLightbox(titulo);
+            abrirLightbox(titulo, srcImagem);
         });
         gatilho.addEventListener('keydown', function (evento) {
             if (evento.key === 'Enter' || evento.key === ' ') {
                 evento.preventDefault();
-                abrirLightbox(titulo);
+                abrirLightbox(titulo, srcImagem);
             }
         });
     });

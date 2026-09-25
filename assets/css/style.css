@@ -882,6 +882,10 @@ p {
 
 .feature-card {
   position: relative;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   transition: border-color var(--dur-base) var(--ease), transform var(--dur-base) var(--ease);
 }
 
@@ -899,6 +903,7 @@ p {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-inline: auto;
   margin-bottom: var(--space-4);
 }
 
@@ -949,6 +954,9 @@ p {
   aspect-ratio: 16 / 10;
   object-fit: cover;
   background: var(--surface-2);
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+  user-select: none;
 }
 
 .carousel__caption {
@@ -1252,6 +1260,17 @@ p {
   position: absolute;
   top: -14px;
   left: var(--space-6);
+}
+
+.plan-card--em-breve {
+  opacity: 0.82;
+}
+
+.plan-card__note {
+  margin-top: var(--space-3);
+  font-size: var(--fs-xs);
+  color: var(--text-secondary);
+  text-align: center;
 }
 
 .plan-card__name {
@@ -1635,9 +1654,18 @@ p {
 }
 
 .footer__links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-size: var(--fs-sm);
   color: var(--text-secondary);
   transition: color var(--dur-fast) var(--ease);
+}
+
+.footer__links a svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
 }
 
 .footer__links a:hover {
@@ -1833,7 +1861,7 @@ p {
   }
 
   .footer__top {
-    grid-template-columns: 1.4fr repeat(3, 1fr);
+    grid-template-columns: 1.2fr repeat(4, 1fr);
   }
 }
 
