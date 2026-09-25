@@ -791,7 +791,7 @@ function icon(string $nome, string $classe = ''): string
                     </div>
                 </div>
                 <div class="online-booking__visual">
-                    <?php $fotoAgendaLink = fotoReal(['agenda_link01.png', 'agenda-link01.png']); ?>
+                    <?php $fotoAgendaLink = fotoReal(['agendar_link01.png', 'agendar_link01.png']); ?>
                     <?php if ($fotoAgendaLink !== null): ?>
                         <img
                             src="/<?= htmlspecialchars($fotoAgendaLink) ?>"
