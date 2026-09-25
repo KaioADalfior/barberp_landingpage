@@ -1308,7 +1308,28 @@ p {
   flex-direction: column;
   gap: 10px;
   margin-bottom: var(--space-6);
-  flex: 1;
+}
+
+/* Planos com muitos itens (ex.: o plano base, com 10 funcionalidades)
+   usam 2 colunas — deixa o card mais compacto e evita que os planos com
+   poucos itens (que só citam "tudo do plano anterior") fiquem com um
+   vão vazio enorme por baixo, só porque o grid estica todos os cards
+   para a mesma altura do card mais alto. */
+.plan-card__list--grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px 16px;
+}
+
+@media (min-width: 480px) {
+  .plan-card__list--grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.plan-card__cta {
+  margin-top: auto;
+  padding-top: var(--space-5);
 }
 
 .plan-card__list li {
@@ -1338,7 +1359,18 @@ p {
   width: 100%;
   min-width: 640px;
   border-collapse: collapse;
+  table-layout: fixed;
   font-size: var(--fs-sm);
+}
+
+.compare-table th:first-child,
+.compare-table td:first-child {
+  width: 38%;
+}
+
+.compare-table th:not(:first-child),
+.compare-table td:not(:first-child) {
+  width: 20.66%;
 }
 
 .compare-table caption {

@@ -143,7 +143,7 @@ $diferenciais = [
 $planos = [
     [
         'nome'  => 'Gestão',
-        'preco' => '129,90',
+        'preco' => '119,90',
         'desc'  => 'A gestão completa da barbearia, do jeito que ela já funciona no dia a dia.',
         'itens' => [
             'Clientes',
@@ -161,7 +161,7 @@ $planos = [
     ],
     [
         'nome'  => 'Gestão + Agendamento Online',
-        'preco' => '189,90',
+        'preco' => '179,90',
         'desc'  => 'Tudo do plano Gestão, com um link para seus clientes agendarem sozinhos.',
         'itens' => [
             'Tudo do plano Gestão',
@@ -173,7 +173,7 @@ $planos = [
     ],
     [
         'nome'  => 'Gestão + Agendamento + WhatsApp',
-        'preco' => '229,90',
+        'preco' => '219,90',
         'desc'  => 'Tudo do plano anterior, com lembretes automáticos pelo WhatsApp.',
         'itens' => [
             'Tudo do plano Gestão + Agendamento Online',
@@ -858,17 +858,19 @@ function icon(string $nome, string $classe = ''): string
                         <span class="plan-card__price-value">R$ <?= htmlspecialchars($p['preco']) ?></span>
                         <span class="plan-card__price-period">/mês</span>
                     </div>
-                    <ul class="plan-card__list">
+                    <ul class="plan-card__list<?= count($p['itens']) > 5 ? ' plan-card__list--grid' : '' ?>">
                         <?php foreach ($p['itens'] as $item): ?>
                         <li><?= icon('check') ?><span><?= htmlspecialchars($item) ?></span></li>
                         <?php endforeach; ?>
                     </ul>
-                    <?php if ($emDesenvolvimento): ?>
-                        <button type="button" class="btn btn--secondary btn--block" disabled aria-disabled="true">Em breve</button>
-                        <p class="plan-card__note">Este plano ainda está em desenvolvimento e não está disponível para contratação.</p>
-                    <?php else: ?>
-                        <a href="#teste-gratuito" class="btn <?= $p['destaque'] ? 'btn--primary' : 'btn--secondary' ?> btn--block" data-cta-plano="<?= htmlspecialchars($p['nome']) ?>">Quero este plano</a>
-                    <?php endif; ?>
+                    <div class="plan-card__cta">
+                        <?php if ($emDesenvolvimento): ?>
+                            <button type="button" class="btn btn--secondary btn--block" disabled aria-disabled="true">Em breve</button>
+                            <p class="plan-card__note">Este plano ainda está em desenvolvimento e não está disponível para contratação.</p>
+                        <?php else: ?>
+                            <a href="#teste-gratuito" class="btn <?= $p['destaque'] ? 'btn--primary' : 'btn--secondary' ?> btn--block" data-cta-plano="<?= htmlspecialchars($p['nome']) ?>">Quero este plano</a>
+                        <?php endif; ?>
+                    </div>
                 </div>
                 <?php endforeach; ?>
             </div>
