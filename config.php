@@ -26,7 +26,7 @@ $DB_HOST = getenv('DB_HOST') ?: 'comandai_barbearia-padrao-bd';
 $DB_PORT = getenv('DB_PORT') ?: '3306';
 $DB_NAME = getenv('DB_NAME') ?: 'leads_app_barber';
 $DB_USER = getenv('DB_USER') ?: null;
-$DB_PASS = getenv('DB_PASS') ?: null;
+$DB_PASS = getenv('DB_PASS') ?: null; 
 
 /**
  * Abre (ou reaproveita) a conexão PDO com o banco de leads.
