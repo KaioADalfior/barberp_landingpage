@@ -661,9 +661,17 @@ h1, h2, h3, h4 {
    14. Acesse de onde estiver
    ------------------------------------------------------------------------- */
 .access__grid {
-  display: grid;
-  gap: var(--space-7);
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  text-align: center;
+  gap: var(--space-7);
+}
+.access__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 640px;
 }
 .access__icon {
   display: inline-flex;
@@ -680,14 +688,14 @@ h1, h2, h3, h4 {
 .access__title { font-size: var(--fs-lg); margin-bottom: var(--space-2); }
 .access__text { font-size: var(--fs-sm); color: var(--text-secondary); line-height: 1.6; margin-bottom: var(--space-5); }
 
-.access__devices { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); }
+.access__devices { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2) var(--space-5); }
 .access__device {
   display: inline-flex; align-items: center; gap: 8px;
   font-size: var(--fs-sm); font-weight: 500; color: var(--text-primary);
 }
 .access__device svg { width: 18px; height: 18px; color: var(--blue); flex-shrink: 0; }
 
-.access__visual { min-width: 0; }
+.access__visual { min-width: 0; width: 100%; max-width: 920px; }
 .access__img { border-radius: var(--radius-md); box-shadow: var(--shadow-md); width: 100%; }
 
 /* -------------------------------------------------------------------------
@@ -1128,8 +1136,6 @@ h1, h2, h3, h4 {
   .testimonials-grid { grid-template-columns: repeat(3, 1fr); }
 
   .carousel__slide { grid-template-columns: 1.3fr 1fr; padding: var(--space-7); }
-
-  .access__grid { grid-template-columns: 1.1fr 0.9fr; }
 
   .footer__top { grid-template-columns: 1.3fr 1fr 1fr; }
 }
