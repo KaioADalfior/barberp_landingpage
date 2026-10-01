@@ -4,16 +4,16 @@ Landing page comercial do BarbERP (produto da DAK Soluções Digitais). Projeto
 standalone, independente do sistema BarbERP em si — feito para ser hospedado
 em outro serviço.
 
-**Versão 2.0 (redesign):** página reestruturada do zero para apresentar
-exclusivamente a V1.0 real do sistema — curta, direta, com aparência de SaaS
-empresarial (sem gradientes, sem carrossel, sem recursos futuros). Ver
-"Redesign — o que mudou" no final deste documento.
+**Versão 3.0 (reformulação):** nova estrutura de 13 seções, 3 planos
+(Básico/Pro/Enterprise) e conteúdo revisado. Ver "Reformulação — o que mudou
+(versão 3.0)" no final deste documento. A versão 2.0 (redesign visual
+anterior) continua descrita logo abaixo dela, para referência histórica.
 
 ## Estrutura
 
 ```
 barberp-landing/
-├── index.php                    Página principal (9 seções)
+├── index.php                    Página principal (13 seções)
 ├── config.php                   Conexão PDO com o banco de leads
 ├── processar_lead.php           Endpoint que recebe o formulário (JSON)
 ├── criar_tabela_leads.sql       Script para criar a tabela Lead
@@ -95,9 +95,9 @@ precisa editar nenhum código**, só colocar o arquivo em
 ```
 assets/images/barberp/dashboard.png        (ou dashboard_principal.png)  → Hero (dashboard)
 assets/images/barberp/agendamentos.png     (ou agenda.png)               → seção "O sistema" — tela "Agenda"
-assets/images/barberp/financeiro.png       (ou dashboard_fin.png)        → seção "O sistema" + seção "Financeiro"
-assets/images/barberp/fiados.png           (ou receber_fiado.png)        → seção "Financeiro" (Controle de fiados)
-assets/images/barberp/agenda-online01.png  (ou agenda_link01.png)        → seção "O sistema" + seção "Agendamento online"
+assets/images/barberp/financeiro.png       (ou dashboard_fin.png)        → seção "O sistema" — "Dashboard financeiro"
+assets/images/barberp/fiados.png           (ou receber_fiado.png)        → seção "O sistema" — "Controle de fiados"
+assets/images/barberp/agenda-online01.png  (ou agenda_link01.png)        → seção "O sistema" — "Agendamento online"
 ```
 
 Cada linha aceita **qualquer um** dos nomes indicados — não precisa
@@ -106,6 +106,19 @@ pelos nomes possíveis em ordem e usa o primeiro que encontrar. Hoje só
 falta uma captura real: `agendamentos.png` (tela de agenda/horários) —
 assim que ela for adicionada, o mockup em CSS é substituído sozinho, sem
 precisar mexer em nada.
+
+### Carrossel + lightbox (pendente)
+
+A especificação da versão 3.0 pede um carrossel grande com lightbox e 10
+capturas reais, cada uma com um nome de arquivo exato:
+`dashboardprincipal.png`, `comoagendar.png`, `agendar.png`,
+`alteraragendamento.png`, `finalizarservico.png`, `receberfiado.png`,
+`dashfinanceiro.png`, `cliente01.png`, `cliente02.png`, `cliente03.png` —
+mais uma nova imagem de hero, `agenda.png`. Nenhum desses 11 arquivos
+existe hoje em `assets/images/barberp/`, e por instrução explícita essa
+parte **não foi implementada** para não inventar telas que não existem.
+Assim que os 11 arquivos forem adicionados com esses nomes exatos, essa
+parte pode ser construída por cima da seção "O sistema" atual.
 
 ## 4. Deploy
 
@@ -219,3 +232,49 @@ do BarbERP:
   (nomes/ids dos campos, honeypot, `data-*`), mesmo `form.js`, mesmo
   `processar_lead.php`, mesma validação e mesmo endpoint. Só a moldura ao
   redor (cores, espaçamento, título) mudou.
+
+## 7. Reformulação — o que mudou (versão 3.0)
+
+Nova estrutura de 13 seções, substituindo a versão 2.0 anterior:
+
+Header → Hero → Frase de impacto → Três motivos → Recursos → O sistema →
+Acesse de onde estiver → Avaliações → Planos → Próximas atualizações → FAQ
+→ Teste gratuito → Contato → CTA final → Footer.
+
+- **Novo:** "Frase de impacto" (seção curta logo após o Hero), "Três
+  motivos para parar de adiar a organização" (3 blocos numerados, sem
+  estatísticas nem percentuais inventados), "Acesse de onde estiver"
+  (acesso via navegador, sem afirmar suporte offline), "Avaliações"
+  (estrutura visual preparada para depoimentos futuros — sem nomes,
+  barbearias ou estrelas inventados, já que nenhuma avaliação real existe
+  ainda no projeto) e "Contato" (reaproveita os links reais de WhatsApp e
+  Instagram já usados no rodapé).
+- **Planos alterados para 3 (antes eram 2):** Básico (R$ 68,90), Pro
+  (R$ 98,90, selo "Recomendado") e **Enterprise (R$ 129,90)** — este
+  último claramente marcado como "Em desenvolvimento", com botão
+  desativado (não é possível contratá-lo) porque os recursos que ele lista
+  (WhatsApp, lembretes) ainda não existem no sistema. O comparativo de
+  planos ganhou 2 linhas novas ("WhatsApp" e "Lembretes"), marcadas
+  "Em desenvolvimento*" apenas na coluna Enterprise, com nota de rodapé
+  explicando que não têm data de lançamento confirmada.
+- **"Próximas atualizações" reduzida de 7 para 5 itens:** Integração com
+  WhatsApp, Lembretes automáticos (novo), Controle de estoque, Controle de
+  comissões e Relatórios avançados. "Produtos e vendas", "Fidelização de
+  clientes" e "Multiunidade" saíram dessa lista pública (seguem fora da
+  V1.0, apenas não aparecem mais nesta seção).
+- **FAQ reduzido de 7 para 6 perguntas**, com foco em acesso, agendamento
+  online (agora no plano Pro), fiados e no período de teste de 30 dias.
+- **Teste gratuito:** reposicionado para depois do FAQ (antes vinha antes),
+  com novo título ("30 dias grátis. Sem cartão. Sem compromisso.") e novo
+  texto de apoio. O formulário em si (campos, validação, endpoint,
+  `form.js`) **não foi tocado**.
+- **Seções antigas "Agendamento online" e "Financeiro + Fiados"** foram
+  removidas como seções dedicadas — o conteúdo real que elas mostravam
+  (agendamento online, financeiro, fiados) continua visível na seção "O
+  sistema", agora com 4 capturas em vez de 3 (a aba de fiados ganhou seu
+  próprio card ali).
+- **Carrossel + lightbox com 10 imagens:** pedidos pela especificação mais
+  recente, mas **não implementados** nesta rodada — nenhum dos 11 arquivos
+  de imagem com nome exato pedido existe no projeto (ver seção 3 acima).
+  A seção "O sistema" atual ocupa esse lugar na nova ordem até que as
+  imagens sejam adicionadas.
