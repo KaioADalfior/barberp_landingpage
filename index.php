@@ -532,7 +532,8 @@ $fotoAgendaLink  = fotoReal(['agenda-online01.png', 'agenda_link01.png', 'agenda
         <div class="container">
             <div class="roadmap-card reveal">
                 <div class="roadmap-card__head">
-                    <span class="badge roadmap-card__eyebrow">Próximas atualizações</span>
+                    <span class="roadmap-card__label">Roadmap</span>
+                    <h2 class="roadmap-card__title">Próximas atualizações</h2>
                     <p class="roadmap-card__text">O BarbERP continua evoluindo. Novos recursos serão adicionados gradualmente para tornar a gestão da sua barbearia ainda mais completa.</p>
                 </div>
 

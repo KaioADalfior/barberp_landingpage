@@ -4,11 +4,16 @@ Landing page comercial do BarbERP (produto da DAK Soluções Digitais). Projeto
 standalone, independente do sistema BarbERP em si — feito para ser hospedado
 em outro serviço.
 
+**Versão 2.0 (redesign):** página reestruturada do zero para apresentar
+exclusivamente a V1.0 real do sistema — curta, direta, com aparência de SaaS
+empresarial (sem gradientes, sem carrossel, sem recursos futuros). Ver
+"Redesign — o que mudou" no final deste documento.
+
 ## Estrutura
 
 ```
 barberp-landing/
-├── index.php                    Página principal (todas as 12 seções)
+├── index.php                    Página principal (9 seções)
 ├── config.php                   Conexão PDO com o banco de leads
 ├── processar_lead.php           Endpoint que recebe o formulário (JSON)
 ├── criar_tabela_leads.sql       Script para criar a tabela Lead
@@ -16,7 +21,6 @@ barberp-landing/
 │   ├── css/style.css            Design system completo (tokens, componentes)
 │   ├── js/
 │   │   ├── main.js              Header, menu mobile, fade-in ao rolar
-│   │   ├── carousel.js          Carrossel de telas (setas, swipe, lightbox)
 │   │   ├── faq.js               Accordion do FAQ
 │   │   └── form.js              Validação e envio do formulário
 │   └── images/barberp/          Capturas reais do sistema (ver abaixo)
@@ -79,35 +83,29 @@ logs do servidor (`error_log`).
 
 ## 3. Imagens reais do sistema
 
-Enquanto uma captura real não existe, o hero, cada tela do carrossel e a
-seção "Financeiro"/"Agendamento Online" mostram uma representação
-estilizada em CSS/HTML — não é uma captura falsa, é só um placeholder
-elegante. `index.php` verifica sozinho, com a função `fotoReal()`, se
-algum dos nomes de arquivo aceitos já foi adicionado e troca o mockup pela
-foto real automaticamente (inclusive na ampliação ao clicar, no
-carrossel) — **não precisa editar nenhum código**, só colocar o arquivo em
+Enquanto uma captura real não existe (hoje é o caso só da tela "Agenda"),
+a seção "O sistema" mostra uma representação estilizada em CSS/HTML no
+lugar dela — não é uma captura falsa, é só um placeholder elegante, sem
+nenhum aviso de "em breve" na tela. `index.php` verifica sozinho, com a
+função `fotoReal()`, se algum dos nomes de arquivo aceitos já foi
+adicionado e troca o mockup pela foto real automaticamente — **não
+precisa editar nenhum código**, só colocar o arquivo em
 `assets/images/barberp/` com um destes nomes:
 
 ```
-assets/images/barberp/dashboard.png        (ou dashboard_principal.png)  → hero (topo) + tela "Início" do carrossel
-assets/images/barberp/agendamentos.png                                  → tela "Agendamentos" do carrossel
-assets/images/barberp/clientes.png                                      → tela "Clientes" do carrossel
-assets/images/barberp/agenda-online01.png                               → tela "Agenda Online" do carrossel
-assets/images/barberp/agenda-online02.png                               → tela "Confirmação" do carrossel
-assets/images/barberp/financeiro.png       (ou dashboard_fin.png)       → seção "Financeiro" (1ª foto)
-assets/images/barberp/fiados.png           (ou receber_fiado.png)       → seção "Financeiro" (2ª foto, ao lado da anterior)
-assets/images/barberp/agenda_link01.png    (ou agenda-link01.png)       → seção "Agendamento online" (foto ao lado do texto)
+assets/images/barberp/dashboard.png        (ou dashboard_principal.png)  → Hero (dashboard)
+assets/images/barberp/agendamentos.png     (ou agenda.png)               → seção "O sistema" — tela "Agenda"
+assets/images/barberp/financeiro.png       (ou dashboard_fin.png)        → seção "O sistema" + seção "Financeiro"
+assets/images/barberp/fiados.png           (ou receber_fiado.png)        → seção "Financeiro" (Controle de fiados)
+assets/images/barberp/agenda-online01.png  (ou agenda_link01.png)        → seção "O sistema" + seção "Agendamento online"
 ```
 
 Cada linha aceita **qualquer um** dos nomes indicados — não precisa
 renomear o arquivo antes de colocá-lo na pasta, o `fotoReal()` procura
-pelos dois nomes possíveis e usa o que encontrar primeiro.
-
-`dashboard.png`/`dashboard_principal.png` é reaproveitado em dois lugares
-(hero + carrossel). O carrossel da seção "Demonstração" tem 5 telas
-(Início, Agendamentos, Clientes, Agenda Online, Confirmação) — Financeiro
-e Fiados não aparecem nele; essas duas ficam só na seção dedicada
-"Financeiro", lado a lado.
+pelos nomes possíveis em ordem e usa o primeiro que encontrar. Hoje só
+falta uma captura real: `agendamentos.png` (tela de agenda/horários) —
+assim que ela for adicionada, o mockup em CSS é substituído sozinho, sem
+precisar mexer em nada.
 
 ## 4. Deploy
 
@@ -169,14 +167,55 @@ normal (não um erro), e `barberp.daksolucoes.com.br/config.php` ou
 ## 5. O que já foi testado
 
 - Todas as validações do formulário (nome, e-mail, telefone, honeypot
-  anti-spam) testadas localmente contra `leads_app_barber`, incluindo o
-  caminho de erro sem credenciais configuradas.
-- Responsividade sem overflow horizontal em 360/390/430/768/1024/1280/1440px.
-- Acessibilidade verificada com axe-core (0 violações WCAG 2 A/AA):
-  labels em todos os campos, foco visível, navegação por teclado no
-  carrossel/FAQ/menu mobile, `aria-*` no accordion e no carrossel.
+  anti-spam) testadas localmente, incluindo o caminho de erro sem
+  credenciais de banco configuradas — comportamento idêntico ao de antes
+  do redesign, nada no formulário foi tocado.
+- Responsividade sem overflow horizontal em 375/390/430/768/1024/1440px.
+- Acessibilidade verificada com axe-core (0 violações WCAG 2 A/AA): labels
+  em todos os campos, foco visível, navegação por teclado no FAQ/menu
+  mobile, `aria-*` no accordion.
 - SEO básico: título, meta description, Open Graph, H1 único, hierarquia
   H2/H3 sem saltos.
 - Funciona sem JavaScript: o formulário envia via POST tradicional, o FAQ
   mostra todas as respostas abertas e o menu mobile aparece sempre visível
   (ver bloco `<noscript>` em `index.php`).
+
+## 5b. Seção "Próximas atualizações"
+
+Logo abaixo dos planos/comparativo (antes do formulário de teste gratuito)
+há um card único e discreto — fundo neutro, borda tracejada — com recursos
+que **ainda não existem na V1.0** (integração com WhatsApp, estoque,
+comissões, produtos e vendas, relatórios avançados, fidelização e
+multiunidade). Cada item tem um status ("Em desenvolvimento" ou
+"Planejado"), nunca uma data ou número de versão. Essa seção:
+
+- **não pertence a nenhum plano** — os dois planos (`$planos` em
+  `index.php`) continuam com exatamente os mesmos itens e preços de antes;
+- **não é clicável/vendável** — não tem CTA próprio, só o aviso final de
+  que são recursos futuros;
+- fica em `$atualizacoesFuturas` no topo de `index.php`, caso precise
+  adicionar, remover ou reordenar algum item depois.
+
+## 6. Redesign — o que mudou (versão 2.0)
+
+Reestruturação visual completa da landing, para apresentar só a V1.0 real
+do BarbERP:
+
+- **Removido:** carrossel de telas (`carousel.js` e o lightbox de
+  ampliação), a seção gigantesca de 10 funcionalidades, o plano de
+  WhatsApp (R$ 139,90 / R$ 219,90) e toda menção a "em desenvolvimento",
+  WhatsApp automático, confirmação automática ou qualquer recurso que
+  ainda não existe no sistema. A página caiu de ~17 para 9 seções.
+- **Novo visual:** tema claro (branco/cinza claro, azul institucional,
+  verde só em confirmações), tipografia Poppins com hierarquia mais forte,
+  screenshots reais emolduradas como "janela de navegador", muito mais
+  espaço em branco — inspirado na simplicidade de SaaS como Linear/Stripe/
+  Vercel, sem gradiente, sem glassmorphism, sem neon.
+- **Planos atualizados:** só os 2 planos realmente disponíveis — Gestão
+  (R$ 69,90) e Gestão + Agendamento Online (R$ 99,90, com selo
+  "Recomendado"). Comparativo simplificado para 9 linhas, com versão em
+  cards no mobile (sem tabela horizontal quebrada).
+- **Formulário "Teste gratuito": mantido 100% intacto** — mesmo HTML
+  (nomes/ids dos campos, honeypot, `data-*`), mesmo `form.js`, mesmo
+  `processar_lead.php`, mesma validação e mesmo endpoint. Só a moldura ao
+  redor (cores, espaçamento, título) mudou.
