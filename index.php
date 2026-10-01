@@ -242,6 +242,15 @@ function icon(string $nome, string $classe = ''): string
     return "<svg {$atributos}>{$miolo}</svg>";
 }
 
+/* Ícone de estrela preenchida (avaliação), usado só na seção "Avaliações".
+ * Fica fora de icon() porque todos os outros ícones usam fill="none" +
+ * stroke, e a estrela precisa ser sólida. */
+function estrelaSvg(): string
+{
+    return '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">'
+        . '<path d="M12 2.5l2.9 6.2 6.8.7-5.1 4.6 1.5 6.7L12 17.8l-6.1 3.4 1.5-6.7-5.1-4.6 6.8-.7L12 2.5Z"/></svg>';
+}
+
 /* Fotos usadas na seção "Acesse de onde estiver" — mantém o padrão
  * resiliente de nomes alternativos, já que não foi pedida como parte do
  * conjunto de nomes exatos do carrossel. */
@@ -517,21 +526,18 @@ $fotoHero = fotoRealExata('agenda.png');
                 <h2 class="section-title">Quem usa, conta.</h2>
             </div>
 
-            <div class="testimonials-grid">
-                <div class="testimonial-card reveal">
-                    <span class="testimonial-card__icon"><?= icon('quote') ?></span>
-                    <p class="testimonial-card__text">"Troquei a agenda manual pela função de agendamentos recorrentes, de 15 em 15 e de 20 em 20 dias. Hoje me sinto muito mais organizado e realizado com o BarbERP."</p>
-                    <p class="testimonial-card__name">Alex Monteiro</p>
+            <div class="testimonial-featured reveal">
+                <span class="testimonial-featured__quote"><?= icon('quote') ?></span>
+                <div class="testimonial-featured__stars" role="img" aria-label="Avaliação: 5 de 5 estrelas">
+                    <?= str_repeat(estrelaSvg(), 5) ?>
                 </div>
-
-                <div class="testimonial-skeleton reveal">
-                    <span class="testimonial-skeleton__icon"><?= icon('quote') ?></span>
-                    <p class="testimonial-skeleton__placeholder">Depoimento real de cliente será inserido aqui.</p>
-                </div>
-
-                <div class="testimonial-skeleton reveal">
-                    <span class="testimonial-skeleton__icon"><?= icon('quote') ?></span>
-                    <p class="testimonial-skeleton__placeholder">Depoimento real de cliente será inserido aqui.</p>
+                <p class="testimonial-featured__text">"Troquei a agenda manual pela função de agendamentos recorrentes, de 15 em 15 e de 20 em 20 dias. Hoje me sinto muito mais organizado e realizado com o BarbERP."</p>
+                <div class="testimonial-featured__footer">
+                    <span class="testimonial-featured__avatar">AM</span>
+                    <div class="testimonial-featured__who">
+                        <p class="testimonial-featured__name">Alex Monteiro</p>
+                        <p class="testimonial-featured__role">Cliente BarbERP</p>
+                    </div>
                 </div>
             </div>
         </div>
