@@ -205,6 +205,7 @@ h1, h2, h3, h4 {
 .badge--blue { background: var(--blue-tint); color: var(--blue-dark); border-color: var(--blue-tint-strong); }
 .badge--highlight { background: var(--blue); color: var(--white); border-color: transparent; }
 .badge--green { background: var(--green-tint); color: var(--green); border-color: transparent; }
+.badge--neutral { background: var(--bg-subtle); color: var(--text-muted); border-color: var(--border-strong); }
 
 .badge svg { width: 13px; height: 13px; }
 
@@ -470,11 +471,49 @@ h1, h2, h3, h4 {
 .feature-card__desc { font-size: var(--fs-sm); color: var(--text-secondary); line-height: 1.55; }
 
 /* -------------------------------------------------------------------------
-   12. Seção de produto (3 screenshots)
+   11b. Frase de impacto
+   ------------------------------------------------------------------------- */
+.impact__box {
+  max-width: 700px;
+  margin-inline: auto;
+  text-align: center;
+}
+.impact__title { font-size: var(--fs-xl); margin-bottom: var(--space-3); }
+.impact__text { font-size: var(--fs-md); color: var(--text-secondary); line-height: 1.6; }
+
+/* -------------------------------------------------------------------------
+   11c. Três motivos
+   ------------------------------------------------------------------------- */
+.reasons-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+}
+
+.reason-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+}
+
+.reason-card__num {
+  display: block;
+  font-size: var(--fs-lg);
+  font-weight: 800;
+  color: var(--blue);
+  margin-bottom: var(--space-3);
+}
+
+.reason-card__title { font-size: var(--fs-md); margin-bottom: var(--space-2); }
+.reason-card__desc { font-size: var(--fs-sm); color: var(--text-secondary); line-height: 1.6; }
+
+/* -------------------------------------------------------------------------
+   12. Seção de produto (screenshots)
    ------------------------------------------------------------------------- */
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--space-6);
   align-items: start;
 }
@@ -589,13 +628,88 @@ h1, h2, h3, h4 {
 .finance-panel__list svg { width: 15px; height: 15px; color: var(--green); flex-shrink: 0; }
 
 /* -------------------------------------------------------------------------
+   14b. Acesse de onde estiver
+   ------------------------------------------------------------------------- */
+.access__box {
+  max-width: 560px;
+  margin-inline: auto;
+  text-align: center;
+}
+.access__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  background: var(--blue-tint);
+  color: var(--blue);
+  margin-bottom: var(--space-4);
+}
+.access__icon svg { width: 24px; height: 24px; }
+.access__title { font-size: var(--fs-lg); margin-bottom: var(--space-2); }
+.access__text { font-size: var(--fs-sm); color: var(--text-secondary); line-height: 1.6; }
+
+/* -------------------------------------------------------------------------
+   14c. Avaliações (estrutura preparada, sem depoimentos inventados)
+   ------------------------------------------------------------------------- */
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+  max-width: 980px;
+  margin-inline: auto;
+}
+
+.testimonial-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: var(--space-6);
+  background: var(--surface);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+}
+
+.testimonial-skeleton__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-subtle);
+  color: var(--text-muted);
+  margin-bottom: var(--space-2);
+}
+.testimonial-skeleton__icon svg { width: 17px; height: 17px; }
+
+.testimonial-skeleton__line {
+  display: block;
+  height: 9px;
+  border-radius: var(--radius-full);
+  background: var(--bg-subtle);
+}
+.testimonial-skeleton__line--w80 { width: 80%; }
+.testimonial-skeleton__line--w60 { width: 60%; }
+.testimonial-skeleton__line--w40 { width: 40%; }
+
+.testimonials-note {
+  margin-top: var(--space-6);
+  text-align: center;
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* -------------------------------------------------------------------------
    15. Planos
    ------------------------------------------------------------------------- */
 .plans-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--space-5);
-  max-width: 820px;
+  max-width: 1080px;
   margin-inline: auto;
 }
 
@@ -603,6 +717,7 @@ h1, h2, h3, h4 {
   display: flex;
   flex-direction: column;
   position: relative;
+  min-width: 0;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -612,6 +727,26 @@ h1, h2, h3, h4 {
 .plan-card--featured {
   border-color: var(--blue);
   box-shadow: 0 0 0 1px var(--blue), var(--shadow-md);
+}
+
+/* Plano ainda não disponível para contratação (ex.: Enterprise) — visual
+   propositalmente mais neutro/discreto que os planos reais, com CTA
+   desativado, para nunca parecer vendável. */
+.plan-card--dev {
+  background: var(--bg-subtle);
+  border-style: dashed;
+  border-color: var(--border-strong);
+}
+.plan-card__cta--disabled {
+  pointer-events: none;
+  opacity: 0.6;
+}
+.plan-card__dev-note {
+  margin-top: var(--space-3);
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  text-align: center;
+  font-style: italic;
 }
 
 .plan-card__badge { position: absolute; top: var(--space-5); right: var(--space-5); }
@@ -662,7 +797,16 @@ h1, h2, h3, h4 {
 .compare-table tbody tr:last-child td { border-bottom: none; }
 .compare-table .ok { color: var(--green); }
 .compare-table .no { color: var(--text-muted); }
+.compare-table .dev { color: var(--text-muted); font-size: var(--fs-xs); font-style: italic; white-space: nowrap; }
 .compare-table svg { width: 17px; height: 17px; }
+
+.compare-note {
+  margin-top: var(--space-4);
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  text-align: center;
+  font-style: italic;
+}
 
 .compare-cards { display: none; flex-direction: column; gap: var(--space-4); }
 .compare-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: var(--space-5); }
@@ -676,6 +820,7 @@ h1, h2, h3, h4 {
 .compare-card__row svg { width: 16px; height: 16px; }
 .compare-card__row .ok { color: var(--green); }
 .compare-card__row .no { color: var(--text-muted); }
+.compare-card__row .dev { color: var(--text-muted); font-size: var(--fs-xs); font-style: italic; }
 
 /* -------------------------------------------------------------------------
    16b. Próximas atualizações (roadmap) — propositalmente mais discreto que
@@ -898,12 +1043,20 @@ h1, h2, h3, h4 {
 .faq-item__panel-inner p { font-size: var(--fs-sm); color: var(--text-secondary); line-height: 1.6; }
 
 /* -------------------------------------------------------------------------
+   18b. Contato
+   ------------------------------------------------------------------------- */
+.contact__box { max-width: 560px; margin-inline: auto; text-align: center; }
+.contact__text { font-size: var(--fs-md); color: var(--text-secondary); margin-bottom: var(--space-5); }
+.contact__links { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-3); }
+
+/* -------------------------------------------------------------------------
    19. CTA final
    ------------------------------------------------------------------------- */
 .cta-final { text-align: center; }
 .cta-final__title { font-size: var(--fs-2xl); margin-bottom: var(--space-3); }
 .cta-final__text { font-size: var(--fs-md); color: var(--text-secondary); max-width: 46ch; margin-inline: auto var(--space-6); margin-bottom: var(--space-6); }
 .cta-final__actions { display: flex; justify-content: center; }
+.cta-final__secondary { margin-top: var(--space-5); font-size: var(--fs-sm); color: var(--text-muted); }
 
 /* -------------------------------------------------------------------------
    20. Footer
@@ -957,6 +1110,9 @@ h1, h2, h3, h4 {
   .compare-cards { display: none; }
 
   .roadmap-grid { grid-template-columns: repeat(2, 1fr); }
+
+  .reasons-grid { grid-template-columns: repeat(3, 1fr); }
+  .testimonials-grid { grid-template-columns: repeat(3, 1fr); }
 
   .footer__top { grid-template-columns: 1.3fr 1fr 1fr; }
 }

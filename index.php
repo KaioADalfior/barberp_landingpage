@@ -2,8 +2,10 @@
 /**
  * index.php
  * Landing page comercial do BarbERP (produto da DAK Soluções Digitais) —
- * versão 2.0 (redesign), apresentando exclusivamente a V1.0 real do
- * sistema: nenhum recurso listado aqui é promessa futura.
+ * versão 3.0 (reformulação), apresentando exclusivamente a V1.0 real do
+ * sistema: nenhum recurso listado aqui é promessa futura, exceto o plano
+ * Enterprise e a seção "Próximas atualizações", ambos claramente marcados
+ * como ainda não disponíveis.
  *
  * Projeto standalone — NÃO faz parte do sistema BarbERP em si (que fica em
  * outro repositório/hospedagem). Esta página só existe para apresentar o
@@ -13,7 +15,20 @@
  * Capturas reais do sistema ficam em assets/images/barberp/. Cada seção usa
  * fotoReal() com uma lista de nomes aceitos — quando um arquivo ainda não
  * existe, um mockup simples em CSS entra no lugar automaticamente (ver
- * seção "Produto"), sem nenhum aviso de "em breve" na tela.
+ * seção "Sistema"), sem nenhum aviso de "em breve" na tela.
+ *
+ * NOTA (reformulação em andamento): a especificação mais recente pede um
+ * carrossel grande com lightbox e 10 capturas reais em nomes de arquivo
+ * exatos (dashboardprincipal.png, comoagendar.png, agendar.png,
+ * alteraragendamento.png, finalizarservico.png, receberfiado.png,
+ * dashfinanceiro.png, cliente01.png, cliente02.png, cliente03.png) e uma
+ * nova imagem de hero (agenda.png). Nenhum desses 11 arquivos existe hoje
+ * em assets/images/barberp/ — por instrução explícita, essa parte NÃO foi
+ * implementada para não inventar imagens/telas que não existem. A seção
+ * "Sistema" abaixo continua usando o mesmo mecanismo fotoReal() com as 4
+ * capturas reais já disponíveis; assim que os 11 arquivos forem
+ * adicionados com os nomes exatos, o carrossel/lightbox pode ser
+ * implementado por cima dessa mesma base sem quebrar nada.
  */
 
 declare(strict_types=1);
@@ -31,57 +46,87 @@ $recursos = [
     ['titulo' => 'Clientes', 'desc' => 'Mantenha os dados e o histórico dos seus clientes sempre à mão.', 'icon' => 'users'],
 ];
 
+/* Três motivos para organizar a barbearia agora — sem estatísticas nem
+ * percentuais inventados, só argumentos ligados a recursos reais da V1.0. */
+$motivos = [
+    [
+        'num'   => '01',
+        'titulo' => 'Seus clientes já esperam comodidade',
+        'desc'  => 'Marcar horário por mensagem, esperar resposta e confirmar manualmente toma tempo seu e do cliente. Com o agendamento online, ele escolhe o serviço, o profissional e o horário sozinho, quando quiser.',
+    ],
+    [
+        'num'   => '02',
+        'titulo' => 'O WhatsApp não foi feito para gerenciar uma barbearia',
+        'desc'  => 'Conversas se perdem, horários ficam espalhados entre contatos e é fácil esquecer um fiado ou um agendamento. Um sistema dedicado mantém tudo organizado em um só lugar.',
+    ],
+    [
+        'num'   => '03',
+        'titulo' => 'Organização gera previsibilidade',
+        'desc'  => 'Saber quem vai ser atendido, quanto está por receber e como está o financeiro do mês evita surpresas e facilita decisões no dia a dia da barbearia.',
+    ],
+];
+
 $planos = [
     [
-        'nome'  => 'Gestão',
-        'preco' => '69,90',
+        'nome'  => 'Básico',
+        'preco' => '68,90',
         'desc'  => 'Para barbearias que querem organizar a gestão.',
         'itens' => ['Clientes', 'Serviços', 'Barbeiros', 'Agendamentos', 'Agendamentos recorrentes', 'Controle de fiados', 'Financeiro', 'Dashboard', 'Perfis', 'Configurações'],
         'destaque' => false,
     ],
     [
-        'nome'  => 'Gestão + Agendamento Online',
-        'preco' => '99,90',
+        'nome'  => 'Pro',
+        'preco' => '98,90',
         'desc'  => 'Para quem também quer permitir que os clientes agendem sozinhos.',
-        'itens' => ['Tudo do plano Gestão', 'Agendamento online', 'Link público de agendamento'],
+        'itens' => ['Tudo do plano Básico', 'Agendamento online', 'Link público de agendamento'],
         'destaque' => true,
         'badge'    => 'Recomendado',
     ],
+    [
+        'nome'  => 'Enterprise',
+        'preco' => '129,90',
+        'desc'  => 'Para barbearias maiores, com recursos avançados ainda em desenvolvimento.',
+        'itens' => ['Tudo do plano Pro', 'Gestão via WhatsApp', 'Lembretes automáticos'],
+        'destaque' => false,
+        'badge'    => 'Em desenvolvimento',
+        'emDesenvolvimento' => true,
+    ],
 ];
 
+/* Comparativo — cada recurso aceita true, false ou 'dev' (ainda em
+ * desenvolvimento, só no Enterprise, nunca apresentado como disponível). */
 $compareFeatures = [
-    ['label' => 'Clientes', 'gestao' => true, 'online' => true],
-    ['label' => 'Serviços', 'gestao' => true, 'online' => true],
-    ['label' => 'Barbeiros', 'gestao' => true, 'online' => true],
-    ['label' => 'Agenda', 'gestao' => true, 'online' => true],
-    ['label' => 'Agendamentos recorrentes', 'gestao' => true, 'online' => true],
-    ['label' => 'Controle de fiados', 'gestao' => true, 'online' => true],
-    ['label' => 'Financeiro', 'gestao' => true, 'online' => true],
-    ['label' => 'Dashboard', 'gestao' => true, 'online' => true],
-    ['label' => 'Agendamento online', 'gestao' => false, 'online' => true],
+    ['label' => 'Clientes', 'basico' => true, 'pro' => true, 'enterprise' => true],
+    ['label' => 'Serviços', 'basico' => true, 'pro' => true, 'enterprise' => true],
+    ['label' => 'Barbeiros', 'basico' => true, 'pro' => true, 'enterprise' => true],
+    ['label' => 'Agenda', 'basico' => true, 'pro' => true, 'enterprise' => true],
+    ['label' => 'Agendamentos recorrentes', 'basico' => true, 'pro' => true, 'enterprise' => true],
+    ['label' => 'Controle de fiados', 'basico' => true, 'pro' => true, 'enterprise' => true],
+    ['label' => 'Financeiro', 'basico' => true, 'pro' => true, 'enterprise' => true],
+    ['label' => 'Dashboard', 'basico' => true, 'pro' => true, 'enterprise' => true],
+    ['label' => 'Agendamento online', 'basico' => false, 'pro' => true, 'enterprise' => true],
+    ['label' => 'WhatsApp', 'basico' => false, 'pro' => false, 'enterprise' => 'dev'],
+    ['label' => 'Lembretes', 'basico' => false, 'pro' => false, 'enterprise' => 'dev'],
 ];
 
 /* Próximas atualizações — recursos ainda NÃO disponíveis na V1.0. Não
  * pertencem a nenhum plano, não têm preço e não devem ser confundidos com
  * os recursos reais acima. */
 $atualizacoesFuturas = [
-    ['titulo' => 'Integração com WhatsApp', 'desc' => 'Lembretes e comunicação com clientes.', 'status' => 'Em desenvolvimento', 'icon' => 'whatsapp'],
+    ['titulo' => 'Integração com WhatsApp', 'desc' => 'Comunicação com clientes direto pelo WhatsApp.', 'status' => 'Em desenvolvimento', 'icon' => 'whatsapp'],
+    ['titulo' => 'Lembretes automáticos', 'desc' => 'Avisos automáticos de agendamentos para os clientes.', 'status' => 'Em desenvolvimento', 'icon' => 'bell'],
     ['titulo' => 'Controle de estoque', 'desc' => 'Produtos, entradas, saídas e movimentações.', 'status' => 'Planejado', 'icon' => 'package'],
     ['titulo' => 'Controle de comissões', 'desc' => 'Comissões e desempenho por barbeiro.', 'status' => 'Planejado', 'icon' => 'percent'],
-    ['titulo' => 'Produtos e vendas', 'desc' => 'Venda de produtos diretamente pelo sistema.', 'status' => 'Planejado', 'icon' => 'bag'],
     ['titulo' => 'Relatórios avançados', 'desc' => 'Indicadores e análises mais detalhadas.', 'status' => 'Planejado', 'icon' => 'bars'],
-    ['titulo' => 'Fidelização de clientes', 'desc' => 'Recursos para relacionamento e recorrência.', 'status' => 'Planejado', 'icon' => 'heart'],
-    ['titulo' => 'Multiunidade', 'desc' => 'Gerenciamento de mais de uma unidade.', 'status' => 'Planejado', 'icon' => 'building'],
 ];
 
 $faqs = [
-    ['p' => 'Preciso instalar algum programa?', 'r' => 'Não. O BarbERP funciona pelo navegador, no computador ou celular.'],
-    ['p' => 'O BarbERP funciona para quem trabalha sozinho?', 'r' => 'Sim. A gestão pode ser utilizada por profissionais individuais e barbearias com equipe.'],
-    ['p' => 'Meus clientes podem agendar online?', 'r' => 'Sim. O recurso está disponível no plano Gestão + Agendamento Online.'],
-    ['p' => 'Posso controlar fiados?', 'r' => 'Sim. Você registra os valores pendentes e acompanha os pagamentos.'],
-    ['p' => 'O sistema possui financeiro?', 'r' => 'Sim. É possível acompanhar entradas, saídas, valores a receber e saldo.'],
-    ['p' => 'Posso mudar de plano?', 'r' => 'Sim. O plano pode ser alterado conforme a necessidade da barbearia.'],
-    ['p' => 'O teste é gratuito?', 'r' => 'Sim. Após o envio do formulário, a equipe entra em contato para liberar o acesso.'],
+    ['p' => 'Preciso instalar algum programa?', 'r' => 'Não. O BarbERP funciona direto do navegador, sem instalação.'],
+    ['p' => 'Posso acessar pelo celular?', 'r' => 'Sim. O BarbERP funciona no computador, notebook, tablet ou celular, direto pelo navegador.'],
+    ['p' => 'Meu cliente pode agendar sozinho?', 'r' => 'Sim, no plano Pro, com o agendamento online e o link público de agendamento.'],
+    ['p' => 'Posso controlar fiados?', 'r' => 'Sim. Você registra os valores pendentes e acompanha os pagamentos, parciais ou totais.'],
+    ['p' => 'O período gratuito tem algum custo?', 'r' => 'Não. São 30 dias grátis, sem necessidade de cartão de crédito.'],
+    ['p' => 'Como eu começo?', 'r' => 'Preencha o formulário de teste gratuito nesta página. Nossa equipe entra em contato para liberar seu acesso.'],
 ];
 
 /* -------------------------------------------------------------------------
@@ -141,6 +186,9 @@ function icon(string $nome, string $classe = ''): string
         'bars'        => '<rect x="4" y="12" width="3.6" height="8" rx="0.8"/><rect x="10.2" y="7" width="3.6" height="13" rx="0.8"/><rect x="16.4" y="3.5" width="3.6" height="16.5" rx="0.8"/>',
         'heart'       => '<path d="M12 20.2S4 15.4 4 9.8a4.3 4.3 0 0 1 8-2.1A4.3 4.3 0 0 1 20 9.8c0 5.6-8 10.4-8 10.4Z"/>',
         'building'    => '<rect x="4" y="3.5" width="10" height="17" rx="1.2"/><rect x="14" y="9.5" width="6" height="11" rx="1.2"/><path d="M7 7.5h1.5M7 11h1.5M7 14.5h1.5"/>',
+        'bell'        => '<path d="M12 3.5c-3 0-4.6 2.3-4.6 5.4v2.6c0 .9-.3 1.7-.9 2.4l-.8 1h12.6l-.8-1c-.6-.7-.9-1.5-.9-2.4V8.9c0-3.1-1.6-5.4-4.6-5.4Z"/><path d="M9.8 19a2.2 2.2 0 0 0 4.4 0"/>',
+        'globe'       => '<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.2 2.3 3.4 5.3 3.4 8.5s-1.2 6.2-3.4 8.5c-2.2-2.3-3.4-5.3-3.4-8.5S9.8 5.8 12 3.5Z"/>',
+        'quote'       => '<path d="M7.5 9.5c-1.7 0-3 1.3-3 3v2.5c0 1.1.9 2 2 2h2.5v-4.5h-2v-.5c0-1.1.9-2 2-2V9.5h-1.5Z"/><path d="M16 9.5c-1.7 0-3 1.3-3 3v2.5c0 1.1.9 2 2 2h2.5v-4.5h-2v-.5c0-1.1.9-2 2-2V9.5H16Z"/>',
     ];
 
     $miolo = $paths[$nome] ?? $paths['check'];
@@ -161,7 +209,7 @@ $fotoAgendaLink  = fotoReal(['agenda-online01.png', 'agenda_link01.png', 'agenda
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BarbERP | Gestão simples para barbearias</title>
-<meta name="description" content="Agenda, clientes, fiados e financeiro da sua barbearia em um só lugar. Conheça o BarbERP e teste gratuitamente.">
+<meta name="description" content="Agenda, clientes, fiados e financeiro da sua barbearia em um só lugar. Conheça o BarbERP e teste grátis por 30 dias.">
 <meta name="theme-color" content="#ffffff">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%232554E8'/%3E%3Ctext x='12' y='17' font-size='13' font-family='Arial,Helvetica,sans-serif' font-weight='700' fill='white' text-anchor='middle'%3EB%3C/text%3E%3C/svg%3E">
 
@@ -169,7 +217,7 @@ $fotoAgendaLink  = fotoReal(['agenda-online01.png', 'agenda_link01.png', 'agenda
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
 <meta property="og:title" content="BarbERP | Gestão simples para barbearias">
-<meta property="og:description" content="Agenda, clientes, fiados e financeiro em um só lugar. Conheça o BarbERP e teste gratuitamente.">
+<meta property="og:description" content="Agenda, clientes, fiados e financeiro em um só lugar. Teste o BarbERP grátis por 30 dias.">
 <meta property="og:site_name" content="BarbERP">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -220,7 +268,6 @@ $fotoAgendaLink  = fotoReal(['agenda-online01.png', 'agenda_link01.png', 'agenda
         <nav class="nav" aria-label="Navegação principal">
             <ul class="nav__list">
                 <li><a class="nav__link" href="#recursos">Recursos</a></li>
-                <li><a class="nav__link" href="#agendamento-online">Agendamento Online</a></li>
                 <li><a class="nav__link" href="#planos">Planos</a></li>
                 <li><a class="nav__link" href="#faq">FAQ</a></li>
             </ul>
@@ -239,7 +286,6 @@ $fotoAgendaLink  = fotoReal(['agenda-online01.png', 'agenda_link01.png', 'agenda
 
 <nav id="mobile-nav" class="mobile-nav" aria-label="Navegação mobile" data-mobile-nav>
     <a class="mobile-nav__link" href="#recursos" data-menu-link>Recursos</a>
-    <a class="mobile-nav__link" href="#agendamento-online" data-menu-link>Agendamento Online</a>
     <a class="mobile-nav__link" href="#planos" data-menu-link>Planos</a>
     <a class="mobile-nav__link" href="#faq" data-menu-link>FAQ</a>
     <a href="#teste-gratuito" class="btn btn--primary btn--block" data-menu-link data-cta-plano="">Testar grátis</a>
@@ -261,7 +307,7 @@ $fotoAgendaLink  = fotoReal(['agenda-online01.png', 'agenda_link01.png', 'agenda
                 <div class="hero__meta">
                     <span class="hero__meta-item"><?= icon('check') ?> Sem instalação</span>
                     <span class="hero__meta-item"><?= icon('check') ?> Acesso pelo navegador</span>
-                    <span class="hero__meta-item"><?= icon('check') ?> Teste gratuito</span>
+                    <span class="hero__meta-item"><?= icon('check') ?> 30 dias grátis</span>
                 </div>
             </div>
 
@@ -298,6 +344,35 @@ $fotoAgendaLink  = fotoReal(['agenda-online01.png', 'agenda_link01.png', 'agenda
         </div>
     </section>
 
+    <!-- ======================= FRASE DE IMPACTO ======================= -->
+    <section class="section section--tight impact">
+        <div class="container">
+            <div class="impact__box reveal">
+                <h2 class="impact__title">Pare de administrar sua barbearia no improviso.</h2>
+                <p class="impact__text">Tenha agenda, clientes, fiados e financeiro organizados em um só lugar, sem depender de anotações espalhadas ou conversas perdidas.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================= TRÊS MOTIVOS ======================= -->
+    <section class="section section--alt" id="motivos">
+        <div class="container">
+            <div class="section-header section-header--center reveal">
+                <h2 class="section-title">Três motivos para parar de adiar a organização</h2>
+            </div>
+
+            <div class="reasons-grid">
+                <?php foreach ($motivos as $m): ?>
+                <div class="reason-card reveal">
+                    <span class="reason-card__num"><?= htmlspecialchars($m['num']) ?></span>
+                    <h3 class="reason-card__title"><?= htmlspecialchars($m['titulo']) ?></h3>
+                    <p class="reason-card__desc"><?= htmlspecialchars($m['desc']) ?></p>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+
     <!-- ======================= RECURSOS (4 cards) ======================= -->
     <section class="section section--tight" id="recursos">
         <div class="container">
@@ -318,8 +393,12 @@ $fotoAgendaLink  = fotoReal(['agenda-online01.png', 'agenda_link01.png', 'agenda
         </div>
     </section>
 
-    <!-- ======================= PRODUTO (3 screenshots) ======================= -->
-    <section class="section section--alt" id="produto">
+    <!-- ======================= SISTEMA (capturas reais) =======================
+         Carrossel + lightbox com as 10 imagens pedidas ficam pendentes: nenhum
+         dos arquivos com nome exato existe ainda em assets/images/barberp/.
+         Enquanto isso, esta seção mostra as 4 capturas reais já disponíveis
+         (ou o mockup em CSS, sem nenhum aviso de "em breve" visível). -->
+    <section class="section section--alt" id="sistema">
         <div class="container">
             <div class="section-header section-header--center reveal">
                 <span class="section-eyebrow">O sistema</span>
@@ -364,6 +443,17 @@ $fotoAgendaLink  = fotoReal(['agenda-online01.png', 'agenda_link01.png', 'agenda
                 </div>
 
                 <div class="product-item reveal">
+                    <?php if ($fotoFiados !== null): ?>
+                    <div class="browser-frame">
+                        <div class="browser-frame__bar"><span class="browser-frame__dot"></span><span class="browser-frame__dot"></span><span class="browser-frame__dot"></span></div>
+                        <div class="browser-frame__body"><img src="/<?= htmlspecialchars($fotoFiados) ?>" alt="Tela de baixa de fiado do BarbERP" loading="lazy" decoding="async"></div>
+                    </div>
+                    <?php endif; ?>
+                    <p class="product-item__caption">Controle de fiados</p>
+                    <p class="product-item__desc">Valores pendentes, histórico e baixa de pagamento.</p>
+                </div>
+
+                <div class="product-item reveal">
                     <?php if ($fotoAgendaLink !== null): ?>
                     <div class="browser-frame browser-frame--phone">
                         <div class="browser-frame__bar"><span class="browser-frame__dot"></span><span class="browser-frame__dot"></span><span class="browser-frame__dot"></span></div>
@@ -371,91 +461,47 @@ $fotoAgendaLink  = fotoReal(['agenda-online01.png', 'agenda_link01.png', 'agenda
                     </div>
                     <?php endif; ?>
                     <p class="product-item__caption">Agendamento online</p>
-                    <p class="product-item__desc">Cliente escolhe o serviço, o barbeiro e o horário sozinho.</p>
+                    <p class="product-item__desc">Cliente escolhe o serviço, o barbeiro e o horário sozinho. Disponível no plano Pro.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ======================= AGENDAMENTO ONLINE ======================= -->
-    <section class="section" id="agendamento-online">
+    <!-- ======================= ACESSE DE ONDE ESTIVER ======================= -->
+    <section class="section section--tight access">
         <div class="container">
-            <div class="online-booking reveal">
-                <div class="online-booking__content">
-                    <span class="section-eyebrow">Agendamento online</span>
-                    <h2 class="section-title">Deixe seus clientes agendarem sozinhos.</h2>
-                    <p class="section-subtitle">Compartilhe seu link de agendamento no WhatsApp, Instagram ou onde quiser. O cliente escolhe o serviço, o barbeiro e o horário disponível.</p>
-                    <div style="margin-top:var(--space-6);">
-                        <a href="#teste-gratuito" class="btn btn--primary btn--block" data-cta-plano="Gestão + Agendamento Online">Quero agendamento online</a>
-                    </div>
-                    <div class="online-booking__note">
-                        <?= icon('shield') ?>
-                        <span>Disponível no plano Gestão + Agendamento Online.</span>
-                    </div>
-                </div>
-                <div class="online-booking__visual">
-                    <?php if ($fotoAgendaLink !== null): ?>
-                    <div class="browser-frame browser-frame--phone">
-                        <div class="browser-frame__bar"><span class="browser-frame__dot"></span><span class="browser-frame__dot"></span><span class="browser-frame__dot"></span></div>
-                        <div class="browser-frame__body"><img src="/<?= htmlspecialchars($fotoAgendaLink) ?>" alt="Cliente escolhendo data e horário na tela pública de agendamento" loading="lazy" decoding="async"></div>
-                    </div>
-                    <?php endif; ?>
-                </div>
+            <div class="access__box reveal">
+                <span class="access__icon"><?= icon('globe') ?></span>
+                <h2 class="access__title">Acesse de onde estiver</h2>
+                <p class="access__text">O BarbERP funciona direto do navegador, no computador, notebook, tablet ou celular — sem precisar instalar nada.</p>
             </div>
         </div>
     </section>
 
-    <!-- ======================= FINANCEIRO + FIADOS ======================= -->
-    <section class="section section--alt" id="financeiro">
+    <!-- ======================= AVALIAÇÕES ======================= -->
+    <section class="section" id="avaliacoes">
         <div class="container">
             <div class="section-header section-header--center reveal">
-                <span class="section-eyebrow">Financeiro</span>
-                <h2 class="section-title">Saiba o que entrou, o que saiu e o que ainda falta receber.</h2>
+                <span class="section-eyebrow">Avaliações</span>
+                <h2 class="section-title">Quem usa, conta.</h2>
             </div>
 
-            <div class="finance-split">
-                <div class="finance-panel reveal">
-                    <div class="finance-panel__head">
-                        <span class="finance-panel__icon"><?= icon('chart') ?></span>
-                        <h3 class="finance-panel__title">Financeiro</h3>
-                    </div>
-                    <ul class="finance-panel__list">
-                        <li><?= icon('check') ?>Entradas</li>
-                        <li><?= icon('check') ?>Saídas</li>
-                        <li><?= icon('check') ?>Valores a receber</li>
-                        <li><?= icon('check') ?>Saldo</li>
-                    </ul>
-                    <?php if ($fotoFinanceiro !== null): ?>
-                    <div class="browser-frame">
-                        <div class="browser-frame__bar"><span class="browser-frame__dot"></span><span class="browser-frame__dot"></span><span class="browser-frame__dot"></span></div>
-                        <div class="browser-frame__body"><img src="/<?= htmlspecialchars($fotoFinanceiro) ?>" alt="Dashboard financeiro do BarbERP" loading="lazy" decoding="async"></div>
-                    </div>
-                    <?php endif; ?>
+            <div class="testimonials-grid">
+                <?php for ($i = 0; $i < 3; $i++): ?>
+                <div class="testimonial-skeleton reveal">
+                    <span class="testimonial-skeleton__icon"><?= icon('quote') ?></span>
+                    <span class="testimonial-skeleton__line testimonial-skeleton__line--w80"></span>
+                    <span class="testimonial-skeleton__line testimonial-skeleton__line--w60"></span>
+                    <span class="testimonial-skeleton__line testimonial-skeleton__line--w40"></span>
                 </div>
-
-                <div class="finance-panel reveal">
-                    <div class="finance-panel__head">
-                        <span class="finance-panel__icon"><?= icon('wallet') ?></span>
-                        <h3 class="finance-panel__title">Controle de fiados</h3>
-                    </div>
-                    <ul class="finance-panel__list">
-                        <li><?= icon('check') ?>Valores pendentes</li>
-                        <li><?= icon('check') ?>Histórico</li>
-                        <li><?= icon('check') ?>Baixa de pagamento</li>
-                    </ul>
-                    <?php if ($fotoFiados !== null): ?>
-                    <div class="browser-frame">
-                        <div class="browser-frame__bar"><span class="browser-frame__dot"></span><span class="browser-frame__dot"></span><span class="browser-frame__dot"></span></div>
-                        <div class="browser-frame__body"><img src="/<?= htmlspecialchars($fotoFiados) ?>" alt="Tela de baixa de fiado do BarbERP" loading="lazy" decoding="async"></div>
-                    </div>
-                    <?php endif; ?>
-                </div>
+                <?php endfor; ?>
             </div>
+            <p class="testimonials-note">Em breve, depoimentos reais de barbearias que usam o BarbERP aparecerão aqui.</p>
         </div>
     </section>
 
     <!-- ======================= PLANOS ======================= -->
-    <section class="section" id="planos">
+    <section class="section section--alt" id="planos">
         <div class="container">
             <div class="section-header section-header--center reveal">
                 <span class="section-eyebrow">Planos</span>
@@ -463,10 +509,10 @@ $fotoAgendaLink  = fotoReal(['agenda-online01.png', 'agenda_link01.png', 'agenda
             </div>
 
             <div class="plans-grid">
-                <?php foreach ($planos as $p): ?>
-                <div class="card plan-card<?= $p['destaque'] ? ' plan-card--featured' : '' ?> reveal">
+                <?php foreach ($planos as $p): $dev = !empty($p['emDesenvolvimento']); ?>
+                <div class="card plan-card<?= $p['destaque'] ? ' plan-card--featured' : '' ?><?= $dev ? ' plan-card--dev' : '' ?> reveal">
                     <?php if (!empty($p['badge'])): ?>
-                        <span class="badge badge--highlight plan-card__badge"><?= htmlspecialchars($p['badge']) ?></span>
+                        <span class="badge <?= $dev ? 'badge--neutral' : 'badge--highlight' ?> plan-card__badge"><?= htmlspecialchars($p['badge']) ?></span>
                     <?php endif; ?>
                     <h3 class="plan-card__name"><?= htmlspecialchars($p['nome']) ?></h3>
                     <p class="plan-card__desc"><?= htmlspecialchars($p['desc']) ?></p>
@@ -480,7 +526,12 @@ $fotoAgendaLink  = fotoReal(['agenda-online01.png', 'agenda_link01.png', 'agenda
                         <?php endforeach; ?>
                     </ul>
                     <div class="plan-card__cta">
+                        <?php if ($dev): ?>
+                        <span class="btn btn--secondary btn--block plan-card__cta--disabled" aria-disabled="true">Em desenvolvimento</span>
+                        <p class="plan-card__dev-note">Este plano ainda não está disponível para contratação.</p>
+                        <?php else: ?>
                         <a href="#teste-gratuito" class="btn <?= $p['destaque'] ? 'btn--primary' : 'btn--secondary' ?> btn--block" data-cta-plano="<?= htmlspecialchars($p['nome']) ?>">Começar agora</a>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <?php endforeach; ?>
@@ -492,32 +543,48 @@ $fotoAgendaLink  = fotoReal(['agenda-online01.png', 'agenda_link01.png', 'agenda
                     <thead>
                         <tr>
                             <th scope="col">Recurso</th>
-                            <th scope="col">Gestão</th>
-                            <th scope="col">Gestão + Online</th>
+                            <th scope="col">Básico</th>
+                            <th scope="col">Pro</th>
+                            <th scope="col">Enterprise</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($compareFeatures as $f): ?>
                         <tr>
                             <td><?= htmlspecialchars($f['label']) ?></td>
-                            <td><?= $f['gestao'] ? '<span class="ok">' . icon('check') . '</span>' : '<span class="no">—</span>' ?></td>
-                            <td><?= $f['online'] ? '<span class="ok">' . icon('check') . '</span>' : '<span class="no">—</span>' ?></td>
+                            <?php foreach (['basico', 'pro', 'enterprise'] as $coluna): $v = $f[$coluna]; ?>
+                            <td>
+                                <?php if ($v === 'dev'): ?>
+                                    <span class="dev">Em desenvolvimento*</span>
+                                <?php elseif ($v): ?>
+                                    <span class="ok"><?= icon('check') ?></span>
+                                <?php else: ?>
+                                    <span class="no">—</span>
+                                <?php endif; ?>
+                            </td>
+                            <?php endforeach; ?>
                         </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+                <p class="compare-note">*Recursos ainda em desenvolvimento, sem data de lançamento confirmada.</p>
 
                 <div class="compare-cards">
-                    <?php foreach ($planos as $p): ?>
+                    <?php foreach ($planos as $p):
+                        $chave = $p['nome'] === 'Básico' ? 'basico' : ($p['nome'] === 'Pro' ? 'pro' : 'enterprise');
+                    ?>
                     <div class="compare-card">
                         <p class="compare-card__name"><?= htmlspecialchars($p['nome']) ?></p>
-                        <?php foreach ($compareFeatures as $f):
-                            $chave = $p['nome'] === 'Gestão' ? 'gestao' : 'online';
-                            $tem = $f[$chave];
-                        ?>
+                        <?php foreach ($compareFeatures as $f): $v = $f[$chave]; ?>
                         <div class="compare-card__row">
                             <span><?= htmlspecialchars($f['label']) ?></span>
-                            <?= $tem ? '<span class="ok">' . icon('check') . '</span>' : '<span class="no">—</span>' ?>
+                            <?php if ($v === 'dev'): ?>
+                                <span class="dev">Em desenvolvimento*</span>
+                            <?php elseif ($v): ?>
+                                <span class="ok"><?= icon('check') ?></span>
+                            <?php else: ?>
+                                <span class="no">—</span>
+                            <?php endif; ?>
                         </div>
                         <?php endforeach; ?>
                     </div>
@@ -555,13 +622,41 @@ $fotoAgendaLink  = fotoReal(['agenda-online01.png', 'agenda_link01.png', 'agenda
         </div>
     </section>
 
+    <!-- ======================= FAQ ======================= -->
+    <section class="section section--alt" id="faq">
+        <div class="container">
+            <div class="section-header section-header--center reveal">
+                <span class="section-eyebrow">Perguntas frequentes</span>
+                <h2 class="section-title">E minhas dúvidas?</h2>
+            </div>
+
+            <div class="faq" data-faq>
+                <?php foreach ($faqs as $i => $item): $faqId = 'faq-' . ($i + 1); ?>
+                <div class="faq-item reveal" data-open="false">
+                    <h3>
+                        <button type="button" class="faq-item__question" id="<?= $faqId ?>-q" aria-expanded="false" aria-controls="<?= $faqId ?>-p" data-faq-trigger>
+                            <span><?= htmlspecialchars($item['p']) ?></span>
+                            <span class="faq-item__icon"><?= icon('plus') ?></span>
+                        </button>
+                    </h3>
+                    <div class="faq-item__panel" id="<?= $faqId ?>-p" role="region" aria-labelledby="<?= $faqId ?>-q" data-faq-panel>
+                        <div class="faq-item__panel-inner">
+                            <p><?= htmlspecialchars($item['r']) ?></p>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+
     <!-- ======================= TESTE GRATUITO ======================= -->
-    <section class="section section--alt" id="teste-gratuito">
+    <section class="section" id="teste-gratuito">
         <div class="container lead-section">
             <div class="lead-form-col reveal">
                 <span class="section-eyebrow">Teste gratuito</span>
-                <h2 class="section-title">Teste o BarbERP na sua barbearia.</h2>
-                <p class="section-subtitle" style="margin-bottom:var(--space-6);">Conheça o sistema na prática e veja como ele pode organizar sua rotina.</p>
+                <h2 class="section-title">30 dias grátis. Sem cartão. Sem compromisso.</h2>
+                <p class="section-subtitle" style="margin-bottom:var(--space-6);">Crie sua conta, configure seus serviços e veja como é ter a rotina da sua barbearia organizada. Se não fizer sentido para você, é só cancelar.</p>
 
                 <span class="badge badge--highlight lead-form__plan-tag" data-plan-tag>
                     <?= icon('check') ?><span data-plan-tag-text>Plano selecionado</span>
@@ -619,36 +714,21 @@ $fotoAgendaLink  = fotoReal(['agenda-online01.png', 'agenda_link01.png', 'agenda
                     <h3 style="margin-bottom:var(--space-4); font-size:var(--fs-md);">O que acontece depois do envio?</h3>
                     <div class="lead-aside__item"><?= icon('check') ?><span>Nossa equipe entra em contato pelo telefone ou e-mail informado.</span></div>
                     <div class="lead-aside__item"><?= icon('check') ?><span>Você recebe acesso para conhecer o sistema na prática.</span></div>
-                    <div class="lead-aside__item"><?= icon('check') ?><span>Sem compromisso — o teste é gratuito.</span></div>
+                    <div class="lead-aside__item"><?= icon('check') ?><span>Sem compromisso — são 30 dias grátis.</span></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ======================= FAQ ======================= -->
-    <section class="section" id="faq">
+    <!-- ======================= CONTATO ======================= -->
+    <section class="section section--tight section--alt contact">
         <div class="container">
-            <div class="section-header section-header--center reveal">
-                <span class="section-eyebrow">Perguntas frequentes</span>
-                <h2 class="section-title">E minhas dúvidas?</h2>
-            </div>
-
-            <div class="faq" data-faq>
-                <?php foreach ($faqs as $i => $item): $faqId = 'faq-' . ($i + 1); ?>
-                <div class="faq-item reveal" data-open="false">
-                    <h3>
-                        <button type="button" class="faq-item__question" id="<?= $faqId ?>-q" aria-expanded="false" aria-controls="<?= $faqId ?>-p" data-faq-trigger>
-                            <span><?= htmlspecialchars($item['p']) ?></span>
-                            <span class="faq-item__icon"><?= icon('plus') ?></span>
-                        </button>
-                    </h3>
-                    <div class="faq-item__panel" id="<?= $faqId ?>-p" role="region" aria-labelledby="<?= $faqId ?>-q" data-faq-panel>
-                        <div class="faq-item__panel-inner">
-                            <p><?= htmlspecialchars($item['r']) ?></p>
-                        </div>
-                    </div>
+            <div class="contact__box reveal">
+                <p class="contact__text">Prefere falar diretamente com a gente? Entre em contato pelo WhatsApp ou Instagram.</p>
+                <div class="contact__links">
+                    <a href="https://wa.me/5528999430511" target="_blank" rel="noopener noreferrer" class="btn btn--secondary"><?= icon('whatsapp') ?> WhatsApp</a>
+                    <a href="https://www.instagram.com/daksolucoes.oficial" target="_blank" rel="noopener noreferrer" class="btn btn--secondary"><?= icon('instagram') ?> Instagram</a>
                 </div>
-                <?php endforeach; ?>
             </div>
         </div>
     </section>
@@ -656,11 +736,12 @@ $fotoAgendaLink  = fotoReal(['agenda-online01.png', 'agenda_link01.png', 'agenda
     <!-- ======================= CTA FINAL ======================= -->
     <section class="section cta-final">
         <div class="container">
-            <h2 class="cta-final__title">Organize sua barbearia hoje.</h2>
-            <p class="cta-final__text">Tenha sua agenda, clientes, fiados e financeiro em um só lugar.</p>
+            <h2 class="cta-final__title">Pronto para deixar o improviso para trás?</h2>
+            <p class="cta-final__text">Comece a organizar sua barbearia com o BarbERP.</p>
             <div class="cta-final__actions">
-                <a href="#teste-gratuito" class="btn btn--primary btn--lg" data-cta-plano="">Testar grátis</a>
+                <a href="#teste-gratuito" class="btn btn--primary btn--lg" data-cta-plano="">Testar grátis por 30 dias</a>
             </div>
+            <p class="cta-final__secondary">Ou fale diretamente conosco pelo WhatsApp ou Instagram.</p>
         </div>
     </section>
 
