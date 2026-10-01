@@ -476,6 +476,37 @@ h1, h2, h3, h4 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-6);
+  align-items: start;
+}
+
+.product-item { display: flex; flex-direction: column; height: 100%; }
+
+/* Fotos reais têm proporções bem diferentes entre si (telas largas de
+   desktop vs. a tela de agendamento, vertical, estilo celular) — fixar uma
+   altura comum para a área de imagem evita que os 3 cards fiquem com
+   tamanhos visivelmente diferentes lado a lado. */
+.product-grid .browser-frame { width: 100%; }
+.product-grid .browser-frame__body {
+  height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
+}
+.product-grid .browser-frame__body img {
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+/* O mockup em CSS (quando ainda não há foto real) usa a própria área da
+   imagem como container do seu conteúdo — mantém o empilhamento vertical
+   original em vez do centralizado usado para fotos. */
+.product-grid .browser-frame__body.agenda-mock {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  padding: 18px 16px 20px;
 }
 
 .product-item__caption {
@@ -595,6 +626,11 @@ h1, h2, h3, h4 {
 .plan-card__list { display: flex; flex-direction: column; gap: 10px; margin-bottom: var(--space-6); flex: 1; }
 .plan-card__list li { display: flex; align-items: flex-start; gap: 9px; font-size: var(--fs-sm); color: var(--text-secondary); }
 .plan-card__list svg { width: 16px; height: 16px; color: var(--green); flex-shrink: 0; margin-top: 2px; }
+
+/* Planos com poucos itens (ex.: "Gestão + Agendamento Online") centralizam
+   a lista no espaço disponível, em vez de deixar um vão grande só embaixo —
+   ajuste puramente visual, não muda nenhum item/preço do plano. */
+.plan-card__list--compact { justify-content: center; }
 
 .plan-card__cta { margin-top: auto; }
 

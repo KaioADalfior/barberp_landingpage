@@ -61,6 +61,19 @@ $compareFeatures = [
     ['label' => 'Agendamento online', 'gestao' => false, 'online' => true],
 ];
 
+/* Próximas atualizações — recursos ainda NÃO disponíveis na V1.0. Não
+ * pertencem a nenhum plano, não têm preço e não devem ser confundidos com
+ * os recursos reais acima. */
+$atualizacoesFuturas = [
+    ['titulo' => 'Integração com WhatsApp', 'desc' => 'Lembretes e comunicação com clientes.', 'status' => 'Em desenvolvimento', 'icon' => 'whatsapp'],
+    ['titulo' => 'Controle de estoque', 'desc' => 'Produtos, entradas, saídas e movimentações.', 'status' => 'Planejado', 'icon' => 'package'],
+    ['titulo' => 'Controle de comissões', 'desc' => 'Comissões e desempenho por barbeiro.', 'status' => 'Planejado', 'icon' => 'percent'],
+    ['titulo' => 'Produtos e vendas', 'desc' => 'Venda de produtos diretamente pelo sistema.', 'status' => 'Planejado', 'icon' => 'bag'],
+    ['titulo' => 'Relatórios avançados', 'desc' => 'Indicadores e análises mais detalhadas.', 'status' => 'Planejado', 'icon' => 'bars'],
+    ['titulo' => 'Fidelização de clientes', 'desc' => 'Recursos para relacionamento e recorrência.', 'status' => 'Planejado', 'icon' => 'heart'],
+    ['titulo' => 'Multiunidade', 'desc' => 'Gerenciamento de mais de uma unidade.', 'status' => 'Planejado', 'icon' => 'building'],
+];
+
 $faqs = [
     ['p' => 'Preciso instalar algum programa?', 'r' => 'Não. O BarbERP funciona pelo navegador, no computador ou celular.'],
     ['p' => 'O BarbERP funciona para quem trabalha sozinho?', 'r' => 'Sim. A gestão pode ser utilizada por profissionais individuais e barbearias com equipe.'],
@@ -122,6 +135,12 @@ function icon(string $nome, string $classe = ''): string
         'minus'       => '<path d="M5 12h14"/>',
         'instagram'   => '<rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="0.6" fill="currentColor" stroke="none"/>',
         'whatsapp'    => '<path d="M20.5 11.5a8.5 8.5 0 0 1-12.4 7.5L4 20l1.1-4a8.5 8.5 0 1 1 15.4-4.5Z"/><path d="M9 9.2c.2-.6.5-.6.8-.6.2 0 .4 0 .6.4.2.5.6 1.4.6 1.6 0 .1 0 .3-.1.4-.2.3-.4.5-.6.7-.1.2-.3.3 0 .6.4.6 1 1.2 1.6 1.6.6.4 1 .6 1.3.7.2.1.4.1.5-.1.2-.2.6-.7.8-.9.2-.2.3-.2.5-.1.2.1 1.4.6 1.6.8.2.1.3.2.3.3 0 .2 0 .7-.3 1.1-.3.4-1.2.8-1.7.8s-1.4-.1-2.9-1c-2.2-1.3-3.6-3.5-3.7-3.7-.1-.2-.9-1.2-.9-2.1 0-.9.5-1.3.7-1.5Z"/>',
+        'package'     => '<path d="M3.5 7.5 12 3l8.5 4.5V16.5L12 21l-8.5-4.5Z"/><path d="M3.8 7.7 12 12l8.2-4.3M12 12v9"/>',
+        'percent'     => '<path d="M6 18 18 6"/><circle cx="7.5" cy="7.5" r="2"/><circle cx="16.5" cy="16.5" r="2"/>',
+        'bag'         => '<path d="M5 8.5h14l-1 11.5H6L5 8.5Z"/><path d="M8.5 8.5v-2a3.5 3.5 0 0 1 7 0v2"/>',
+        'bars'        => '<rect x="4" y="12" width="3.6" height="8" rx="0.8"/><rect x="10.2" y="7" width="3.6" height="13" rx="0.8"/><rect x="16.4" y="3.5" width="3.6" height="16.5" rx="0.8"/>',
+        'heart'       => '<path d="M12 20.2S4 15.4 4 9.8a4.3 4.3 0 0 1 8-2.1A4.3 4.3 0 0 1 20 9.8c0 5.6-8 10.4-8 10.4Z"/>',
+        'building'    => '<rect x="4" y="3.5" width="10" height="17" rx="1.2"/><rect x="14" y="9.5" width="6" height="11" rx="1.2"/><path d="M7 7.5h1.5M7 11h1.5M7 14.5h1.5"/>',
     ];
 
     $miolo = $paths[$nome] ?? $paths['check'];
@@ -455,7 +474,7 @@ $fotoAgendaLink  = fotoReal(['agenda-online01.png', 'agenda_link01.png', 'agenda
                         <span class="plan-card__price-value">R$ <?= htmlspecialchars($p['preco']) ?></span>
                         <span class="plan-card__price-period">/mês</span>
                     </div>
-                    <ul class="plan-card__list">
+                    <ul class="plan-card__list<?= count($p['itens']) <= 5 ? ' plan-card__list--compact' : '' ?>">
                         <?php foreach ($p['itens'] as $item): ?>
                         <li><?= icon('check') ?><span><?= htmlspecialchars($item) ?></span></li>
                         <?php endforeach; ?>
@@ -504,6 +523,33 @@ $fotoAgendaLink  = fotoReal(['agenda-online01.png', 'agenda_link01.png', 'agenda
                     </div>
                     <?php endforeach; ?>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================= PRÓXIMAS ATUALIZAÇÕES ======================= -->
+    <section class="section section--tight" id="atualizacoes">
+        <div class="container">
+            <div class="roadmap-card reveal">
+                <div class="roadmap-card__head">
+                    <span class="badge roadmap-card__eyebrow">Próximas atualizações</span>
+                    <p class="roadmap-card__text">O BarbERP continua evoluindo. Novos recursos serão adicionados gradualmente para tornar a gestão da sua barbearia ainda mais completa.</p>
+                </div>
+
+                <div class="roadmap-grid">
+                    <?php foreach ($atualizacoesFuturas as $rf): ?>
+                    <div class="roadmap-item">
+                        <span class="roadmap-item__icon"><?= icon($rf['icon']) ?></span>
+                        <div class="roadmap-item__body">
+                            <p class="roadmap-item__title"><?= htmlspecialchars($rf['titulo']) ?></p>
+                            <p class="roadmap-item__desc"><?= htmlspecialchars($rf['desc']) ?></p>
+                            <span class="badge roadmap-item__status<?= $rf['status'] === 'Em desenvolvimento' ? ' roadmap-item__status--dev' : '' ?>"><?= htmlspecialchars($rf['status']) ?></span>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+
+                <p class="roadmap-card__note">Os recursos apresentados acima não fazem parte da versão 1.0 atual e poderão ser disponibilizados gradualmente em futuras atualizações.</p>
             </div>
         </div>
     </section>
