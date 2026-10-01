@@ -4,10 +4,12 @@ Landing page comercial do BarbERP (produto da DAK Soluções Digitais). Projeto
 standalone, independente do sistema BarbERP em si — feito para ser hospedado
 em outro serviço.
 
-**Versão 3.0 (reformulação):** nova estrutura de 13 seções, 3 planos
-(Básico/Pro/Enterprise) e conteúdo revisado. Ver "Reformulação — o que mudou
-(versão 3.0)" no final deste documento. A versão 2.0 (redesign visual
-anterior) continua descrita logo abaixo dela, para referência histórica.
+**Versão 4.0 (reformulação visual completa):** carrossel de produto com
+lightbox, nova direção visual (estilo SaaS/B2B), copy revisada em quase
+todas as seções e os mesmos 3 planos (Básico/Pro/Enterprise) da versão 3.0.
+Ver "Reformulação — o que mudou (versão 4.0)" no final deste documento. As
+versões 3.0 e 2.0 continuam descritas logo abaixo dela, para referência
+histórica.
 
 ## Estrutura
 
@@ -107,18 +109,43 @@ falta uma captura real: `agendamentos.png` (tela de agenda/horários) —
 assim que ela for adicionada, o mockup em CSS é substituído sozinho, sem
 precisar mexer em nada.
 
-### Carrossel + lightbox (pendente)
+### Carrossel + lightbox (mecanismo pronto, imagens pendentes)
 
-A especificação da versão 3.0 pede um carrossel grande com lightbox e 10
-capturas reais, cada uma com um nome de arquivo exato:
-`dashboardprincipal.png`, `comoagendar.png`, `agendar.png`,
-`alteraragendamento.png`, `finalizarservico.png`, `receberfiado.png`,
-`dashfinanceiro.png`, `cliente01.png`, `cliente02.png`, `cliente03.png` —
-mais uma nova imagem de hero, `agenda.png`. Nenhum desses 11 arquivos
-existe hoje em `assets/images/barberp/`, e por instrução explícita essa
-parte **não foi implementada** para não inventar telas que não existem.
-Assim que os 11 arquivos forem adicionados com esses nomes exatos, essa
-parte pode ser construída por cima da seção "O sistema" atual.
+A partir da versão 4.0 o carrossel e o lightbox **já estão totalmente
+implementados** (`assets/js/carousel.js`, `assets/js/lightbox.js`,
+estilos em `style.css`) e funcionam com dados de teste. O que falta são
+só os arquivos de imagem em si — `index.php` procura por **nome exato**
+(sem aceitar apelidos/variações, via `fotoRealExata()`) e, quando não
+encontra, mostra um placeholder neutro (nunca uma captura falsa, nunca um
+texto de "em breve") no lugar da imagem.
+
+Nomes exatos aceitos, todos dentro de `assets/images/barberp/`:
+
+```
+agenda.png                → Hero (imagem principal)
+dashboardprincipal.png    → Carrossel, slide 1
+comoagendar.png           → Carrossel, slide 2
+agendar.png               → Carrossel, slide 3
+alteraragendamento.png    → Carrossel, slide 4
+finalizarservico.png      → Carrossel, slide 5
+receberfiado.png          → Carrossel, slide 6
+dashfinanceiro.png        → Carrossel, slide 7
+cliente01.png             → Carrossel, slide 8
+cliente02.png             → Carrossel, slide 9
+cliente03.png             → Carrossel, slide 10
+tresjuntos.png            → Seção "Acesse de onde estiver" (opcional)
+```
+
+**Nenhum desses 12 arquivos existe hoje no projeto** (confirmado por
+busca exaustiva). Assim que forem adicionados com esses nomes exatos,
+cada imagem aparece automaticamente no lugar certo — não é preciso mexer
+em nenhum código. Os 4 arquivos reais que já existiam antes da v4.0
+(`dashboard.png`, `financeiro.png`, `fiados.png`, `agenda_link01.png`)
+continuam na pasta mas **não são usados em nenhuma seção da v4.0** — por
+instrução explícita, uma imagem existente nunca é usada no lugar de outra
+que tenha nome diferente do pedido, então eles ficam disponíveis caso
+sejam renomeados/reaproveitados manualmente no futuro, ou podem ser
+removidos se não forem mais necessários.
 
 ## 4. Deploy
 
@@ -278,3 +305,51 @@ Acesse de onde estiver → Avaliações → Planos → Próximas atualizações 
   de imagem com nome exato pedido existe no projeto (ver seção 3 acima).
   A seção "O sistema" atual ocupa esse lugar na nova ordem até que as
   imagens sejam adicionadas.
+
+## 8. Reformulação — o que mudou (versão 4.0)
+
+Reformulação visual completa, construída em cima da estrutura da versão
+3.0 (mesma ordem de 13 seções: Header → Hero → Frase de impacto → Três
+motivos → O sistema (carrossel) → Acesse de onde estiver → Avaliações →
+Planos → Futuras atualizações → FAQ → Teste gratuito → Contato → CTA
+final → Footer).
+
+- **Carrossel de produto implementado do zero** (`assets/js/carousel.js`):
+  10 slides, imagem grande à esquerda + texto à direita no desktop,
+  imagem em cima + texto embaixo no mobile, com setas, indicadores (dots),
+  navegação por teclado (setas ←/→ quando o carrossel está visível) e
+  arraste por toque (swipe) no celular. Funciona sem JavaScript: o CSS
+  dentro do `<noscript>` empilha todas as slides visíveis.
+- **Lightbox implementado do zero** (`assets/js/lightbox.js`): clique em
+  qualquer imagem do Hero ou do carrossel abre um modal (~90% da tela,
+  fundo escuro), que fecha com o botão "X", clicando fora da imagem ou com
+  Esc. Nunca navega para outra página nem altera os arquivos originais.
+- **Busca de imagem por nome exato** (`fotoRealExata()`, nova função):
+  diferente da antiga `fotoReal()` (que aceitava apelidos), essa versão
+  não aceita variações de nome nem substitui uma imagem por outra — se o
+  arquivo pedido não existir, aparece um placeholder neutro (nunca uma
+  captura falsa). Ver seção 3 acima para a lista completa dos 12 arquivos
+  ainda pendentes.
+- **Copy revisada** em: Hero (texto de apoio abaixo dos botões), "Frase de
+  impacto", "Três motivos" (texto definitivo, sem estatísticas
+  inventadas), "Acesse de onde estiver" (ícones de computador/notebook/
+  tablet/celular, sem afirmar que funciona offline), "Avaliações" (1
+  depoimento real — Alex Monteiro, sobre trocar a agenda manual pelos
+  agendamentos recorrentes de 15 e 20 dias — mais 2 cards com aviso
+  honesto "Depoimento real de cliente será inserido aqui.", sem nomes,
+  notas ou barbearias inventadas), comparativo de planos (rótulos mais
+  curtos), "Futuras atualizações" (texto corrido mais simples, sem grid de
+  cards) e FAQ (perguntas reformuladas, mesmas 6 do v3.0).
+- **Seções antigas removidas:** o grid estático de 4 funcionalidades, o
+  grid de imagens "Produto", a seção dedicada "Agendamento Online" e a
+  seção "Financeiro + Fiados" — todas substituídas pelo novo carrossel
+  único, que concentra as 10 funcionalidades em um só componente.
+- **Design:** tipografia Poppins mantida, paleta ajustada para tons mais
+  institucionais (azul/azul-escuro/branco/cinza claro, verde só em estados
+  positivos), sem gradientes, glassmorphism, neon ou sombras pesadas.
+- **Planos:** sem mudança de preços/estrutura em relação à v3.0 (Básico
+  R$ 68,90 / Pro R$ 98,90 "Recomendado" / Enterprise R$ 129,90 "Em
+  desenvolvimento", com botão desativado).
+- **Formulário "Teste gratuito": não foi tocado** — mesmos campos, ids,
+  `name`s, validação (`form.js`), endpoint (`processar_lead.php`) e banco
+  (`config.php`, `criar_tabela_leads.sql`) de antes.

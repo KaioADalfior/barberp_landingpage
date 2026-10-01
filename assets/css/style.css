@@ -1,5 +1,5 @@
 /* =============================================================================
-   BarbERP — Landing Page (v2.0 — redesign "SaaS empresarial")
+   BarbERP — Landing Page (v4.0 — reformulação completa)
    DAK Soluções Digitais
 
    Paleta clara, tipografia Poppins, muito espaço em branco, componentes
@@ -70,6 +70,7 @@
   --fs-3xl: 2.875rem;
 
   --container-w: 1180px;
+  --container-w-wide: 1360px;
 
   --dur-fast: 150ms;
   --dur-base: 220ms;
@@ -99,6 +100,7 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
+body.lightbox-open { overflow: hidden; }
 
 img { max-width: 100%; display: block; }
 a { color: inherit; text-decoration: none; }
@@ -118,6 +120,10 @@ h1, h2, h3, h4 {
   max-width: var(--container-w);
   margin-inline: auto;
   padding-inline: var(--space-5);
+}
+
+.container--wide {
+  max-width: var(--container-w-wide);
 }
 
 [hidden] { display: none !important; }
@@ -179,6 +185,8 @@ h1, h2, h3, h4 {
   font-size: var(--fs-2xl);
   margin-bottom: var(--space-3);
 }
+
+.section-header--center .section-subtitle { margin-top: calc(var(--space-3) * -1 + var(--space-1)); }
 
 .section-subtitle {
   font-size: var(--fs-md);
@@ -277,7 +285,7 @@ h1, h2, h3, h4 {
 }
 
 /* -------------------------------------------------------------------------
-   8. Moldura de navegador (screenshots)
+   8. Moldura de navegador (screenshots) + gatilho de lightbox
    ------------------------------------------------------------------------- */
 .browser-frame {
   background: var(--white);
@@ -306,6 +314,69 @@ h1, h2, h3, h4 {
 
 .browser-frame--phone { max-width: 300px; margin-inline: auto; }
 .browser-frame--phone .browser-frame__bar { padding: 9px 12px; }
+
+/* Qualquer screenshot clicável (hero + carrossel) usa este wrapper: sem
+   borda própria (herda a do browser-frame interno), com uma pequena lupa
+   que aparece no hover/focus para indicar que a imagem amplia. */
+.img-trigger {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: zoom-in;
+  text-align: left;
+}
+.img-trigger:focus-visible { outline-offset: 4px; }
+
+.img-trigger__hint {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(16, 24, 44, 0.55);
+  color: #fff;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+  pointer-events: none;
+}
+.img-trigger__hint svg { width: 16px; height: 16px; }
+.img-trigger:hover .img-trigger__hint,
+.img-trigger:focus-visible .img-trigger__hint { opacity: 1; transform: scale(1); }
+
+/* Painel neutro para imagens pedidas que ainda não foram adicionadas ao
+   projeto — não simula uma tela falsa, é só um espaço reservado honesto. */
+.media-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 260px;
+  background: var(--bg-subtle);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+}
+.media-placeholder svg { width: 30px; height: 30px; opacity: 0.55; }
+
+/* Mockup em CSS para quando ainda não há foto real (ex.: Hero sem
+   agenda.png) — representação estilizada, nunca uma captura falsa. */
+.agenda-mock { background: var(--app-bg); padding: 18px 16px 20px; color: #e7eaf3; }
+.agenda-mock__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.agenda-mock__title { font-size: 12px; font-weight: 600; letter-spacing: 0.02em; color: #fff; }
+.agenda-mock__sub { font-size: 10px; color: #7c869c; }
+.agenda-mock__cols { display: grid; grid-template-columns: 34px 1fr 1fr; gap: 6px; }
+.agenda-mock__time { font-size: 9px; color: #5c6680; padding-top: 8px; }
+.agenda-mock__colhead { font-size: 9px; color: #9aa5bd; font-weight: 600; padding-bottom: 6px; text-align: center; }
+.agenda-mock__cell { height: 26px; border-radius: 6px; background: rgba(255,255,255,0.045); margin-bottom: 6px; }
+.agenda-mock__cell--blue { background: rgba(37, 99, 235, 0.55); }
+.agenda-mock__cell--green { background: rgba(21, 128, 61, 0.55); }
 
 /* -------------------------------------------------------------------------
    9. Header
@@ -436,42 +507,7 @@ h1, h2, h3, h4 {
 .hero__visual { min-width: 0; }
 
 /* -------------------------------------------------------------------------
-   11. Cards de recursos (4 cards)
-   ------------------------------------------------------------------------- */
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-5);
-}
-
-.feature-card {
-  padding: var(--space-6) var(--space-5);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  transition: border-color var(--dur-base) var(--ease), box-shadow var(--dur-base) var(--ease), transform var(--dur-base) var(--ease);
-}
-.feature-card:hover {
-  border-color: var(--border-strong);
-  box-shadow: var(--shadow-sm);
-  transform: translateY(-2px);
-}
-
-.feature-card__icon {
-  width: 42px; height: 42px;
-  display: flex; align-items: center; justify-content: center;
-  border-radius: var(--radius-sm);
-  background: var(--blue-tint);
-  color: var(--blue);
-  margin-bottom: var(--space-4);
-}
-.feature-card__icon svg { width: 21px; height: 21px; }
-
-.feature-card__title { font-size: var(--fs-md); margin-bottom: var(--space-2); }
-.feature-card__desc { font-size: var(--fs-sm); color: var(--text-secondary); line-height: 1.55; }
-
-/* -------------------------------------------------------------------------
-   11b. Frase de impacto
+   11. Frase de impacto
    ------------------------------------------------------------------------- */
 .impact__box {
   max-width: 700px;
@@ -482,7 +518,7 @@ h1, h2, h3, h4 {
 .impact__text { font-size: var(--fs-md); color: var(--text-secondary); line-height: 1.6; }
 
 /* -------------------------------------------------------------------------
-   11c. Três motivos
+   12. Três motivos
    ------------------------------------------------------------------------- */
 .reasons-grid {
   display: grid;
@@ -509,131 +545,125 @@ h1, h2, h3, h4 {
 .reason-card__desc { font-size: var(--fs-sm); color: var(--text-secondary); line-height: 1.6; }
 
 /* -------------------------------------------------------------------------
-   12. Seção de produto (screenshots)
+   13. Carrossel de produto ("O sistema") — ~90% da largura, imagem grande
+   + texto ao lado no desktop, imagem em cima + texto embaixo no mobile.
    ------------------------------------------------------------------------- */
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-6);
-  align-items: start;
+.carousel-wrap {
+  width: 92%;
+  max-width: var(--container-w-wide);
+  margin-inline: auto;
 }
 
-.product-item { display: flex; flex-direction: column; height: 100%; }
+.carousel__viewport { overflow: hidden; border-radius: var(--radius-lg); }
 
-/* Fotos reais têm proporções bem diferentes entre si (telas largas de
-   desktop vs. a tela de agendamento, vertical, estilo celular) — fixar uma
-   altura comum para a área de imagem evita que os 3 cards fiquem com
-   tamanhos visivelmente diferentes lado a lado. */
-.product-grid .browser-frame { width: 100%; }
-.product-grid .browser-frame__body {
-  height: 240px;
+.carousel__track {
+  display: flex;
+  transition: transform 420ms var(--ease);
+}
+
+.carousel__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  display: grid;
+  gap: var(--space-6);
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: var(--space-6);
+}
+
+.carousel__media { min-width: 0; }
+.carousel__media .browser-frame { width: 100%; }
+.carousel__media .browser-frame__body {
+  min-height: 220px;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: var(--space-3);
 }
-.product-grid .browser-frame__body img {
-  width: auto;
-  height: 100%;
-  max-width: 100%;
+.carousel__media .browser-frame__body img {
+  width: 100%;
+  height: auto;
+  max-height: 56vh;
   object-fit: contain;
 }
-/* O mockup em CSS (quando ainda não há foto real) usa a própria área da
-   imagem como container do seu conteúdo — mantém o empilhamento vertical
-   original em vez do centralizado usado para fotos. */
-.product-grid .browser-frame__body.agenda-mock {
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: center;
-  padding: 18px 16px 20px;
-}
 
-.product-item__caption {
-  margin-top: var(--space-4);
-  font-size: var(--fs-sm);
+.carousel__info { min-width: 0; }
+.carousel__step {
+  display: inline-block;
+  font-size: var(--fs-xs);
   font-weight: 600;
-  color: var(--text-primary);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: var(--space-3);
 }
-.product-item__desc {
-  margin-top: 2px;
+.carousel__title { font-size: var(--fs-lg); margin-bottom: var(--space-3); }
+.carousel__desc { font-size: var(--fs-sm); color: var(--text-secondary); line-height: 1.65; }
+
+.carousel__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px var(--space-4);
+  margin-top: var(--space-5);
+}
+.carousel__legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   font-size: var(--fs-xs);
   color: var(--text-secondary);
 }
+.carousel__legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
-/* Mockup CSS para telas ainda sem captura real (ex.: Agenda) */
-.agenda-mock { background: var(--app-bg); padding: 18px 16px 20px; color: #e7eaf3; }
-.agenda-mock__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-.agenda-mock__title { font-size: 12px; font-weight: 600; letter-spacing: 0.02em; color: #fff; }
-.agenda-mock__sub { font-size: 10px; color: #7c869c; }
-.agenda-mock__cols { display: grid; grid-template-columns: 34px 1fr 1fr; gap: 6px; }
-.agenda-mock__time { font-size: 9px; color: #5c6680; padding-top: 8px; }
-.agenda-mock__colhead { font-size: 9px; color: #9aa5bd; font-weight: 600; padding-bottom: 6px; text-align: center; }
-.agenda-mock__cell { height: 26px; border-radius: 6px; background: rgba(255,255,255,0.045); margin-bottom: 6px; }
-.agenda-mock__cell--blue { background: rgba(37, 99, 235, 0.55); }
-.agenda-mock__cell--green { background: rgba(21, 128, 61, 0.55); }
+.carousel__complement {
+  margin-top: var(--space-4);
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.carousel__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+
+.carousel__arrow {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  background: var(--white);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+  flex-shrink: 0;
+}
+.carousel__arrow:hover { border-color: var(--text-muted); background: var(--bg-subtle); }
+.carousel__arrow svg { width: 18px; height: 18px; }
+
+.carousel__dots { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; justify-content: center; }
+.carousel__dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--border-strong);
+  border: none; padding: 0; cursor: pointer;
+  transition: background var(--dur-fast) var(--ease), width var(--dur-fast) var(--ease);
+}
+.carousel__dot.is-active { background: var(--blue); width: 20px; border-radius: 4px; }
 
 /* -------------------------------------------------------------------------
-   13. Agendamento Online (seção dedicada)
+   14. Acesse de onde estiver
    ------------------------------------------------------------------------- */
-.online-booking {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-7);
+.access__grid {
   display: grid;
   gap: var(--space-7);
   align-items: center;
-}
-
-.online-booking__note {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-  margin-top: var(--space-5);
-  padding: var(--space-4);
-  background: var(--blue-tint);
-  border-radius: var(--radius-sm);
-  font-size: var(--fs-xs);
-  color: var(--blue-darker);
-}
-.online-booking__note svg { color: var(--blue); flex-shrink: 0; margin-top: 2px; }
-
-/* -------------------------------------------------------------------------
-   14. Financeiro + Fiados
-   ------------------------------------------------------------------------- */
-.finance-split {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-6);
-}
-
-.finance-panel {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: var(--space-6);
-}
-
-.finance-panel__head { display: flex; align-items: center; gap: 10px; margin-bottom: var(--space-4); }
-.finance-panel__icon {
-  width: 36px; height: 36px; border-radius: var(--radius-sm);
-  display: flex; align-items: center; justify-content: center;
-  background: var(--blue-tint); color: var(--blue); flex-shrink: 0;
-}
-.finance-panel__icon svg { width: 18px; height: 18px; }
-.finance-panel__title { font-size: var(--fs-md); }
-
-.finance-panel__list { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); margin-bottom: var(--space-5); }
-.finance-panel__list li { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-sm); color: var(--text-secondary); }
-.finance-panel__list svg { width: 15px; height: 15px; color: var(--green); flex-shrink: 0; }
-
-/* -------------------------------------------------------------------------
-   14b. Acesse de onde estiver
-   ------------------------------------------------------------------------- */
-.access__box {
-  max-width: 560px;
-  margin-inline: auto;
-  text-align: center;
 }
 .access__icon {
   display: inline-flex;
@@ -648,10 +678,20 @@ h1, h2, h3, h4 {
 }
 .access__icon svg { width: 24px; height: 24px; }
 .access__title { font-size: var(--fs-lg); margin-bottom: var(--space-2); }
-.access__text { font-size: var(--fs-sm); color: var(--text-secondary); line-height: 1.6; }
+.access__text { font-size: var(--fs-sm); color: var(--text-secondary); line-height: 1.6; margin-bottom: var(--space-5); }
+
+.access__devices { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); }
+.access__device {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: var(--fs-sm); font-weight: 500; color: var(--text-primary);
+}
+.access__device svg { width: 18px; height: 18px; color: var(--blue); flex-shrink: 0; }
+
+.access__visual { min-width: 0; }
+.access__img { border-radius: var(--radius-md); box-shadow: var(--shadow-md); width: 100%; }
 
 /* -------------------------------------------------------------------------
-   14c. Avaliações (estrutura preparada, sem depoimentos inventados)
+   15. Avaliações
    ------------------------------------------------------------------------- */
 .testimonials-grid {
   display: grid;
@@ -661,16 +701,17 @@ h1, h2, h3, h4 {
   margin-inline: auto;
 }
 
-.testimonial-skeleton {
+.testimonial-card {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--space-3);
   padding: var(--space-6);
   background: var(--surface);
-  border: 1px dashed var(--border-strong);
+  border: 1px solid var(--border);
   border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
 }
-
+.testimonial-card__icon,
 .testimonial-skeleton__icon {
   display: inline-flex;
   align-items: center;
@@ -678,32 +719,33 @@ h1, h2, h3, h4 {
   width: 34px;
   height: 34px;
   border-radius: var(--radius-sm);
-  background: var(--bg-subtle);
-  color: var(--text-muted);
-  margin-bottom: var(--space-2);
+  background: var(--blue-tint);
+  color: var(--blue);
 }
-.testimonial-skeleton__icon svg { width: 17px; height: 17px; }
+.testimonial-skeleton__icon { background: var(--bg-subtle); color: var(--text-muted); }
+.testimonial-card__icon svg, .testimonial-skeleton__icon svg { width: 17px; height: 17px; }
 
-.testimonial-skeleton__line {
-  display: block;
-  height: 9px;
-  border-radius: var(--radius-full);
+.testimonial-card__text { font-size: var(--fs-sm); color: var(--text-secondary); line-height: 1.6; flex: 1; }
+.testimonial-card__name { font-size: var(--fs-sm); font-weight: 700; color: var(--text-primary); }
+
+.testimonial-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-6);
   background: var(--bg-subtle);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-md);
 }
-.testimonial-skeleton__line--w80 { width: 80%; }
-.testimonial-skeleton__line--w60 { width: 60%; }
-.testimonial-skeleton__line--w40 { width: 40%; }
-
-.testimonials-note {
-  margin-top: var(--space-6);
-  text-align: center;
-  font-size: var(--fs-xs);
+.testimonial-skeleton__placeholder {
+  font-size: var(--fs-sm);
   color: var(--text-muted);
   font-style: italic;
+  line-height: 1.6;
 }
 
 /* -------------------------------------------------------------------------
-   15. Planos
+   16. Planos
    ------------------------------------------------------------------------- */
 .plans-grid {
   display: grid;
@@ -762,15 +804,12 @@ h1, h2, h3, h4 {
 .plan-card__list li { display: flex; align-items: flex-start; gap: 9px; font-size: var(--fs-sm); color: var(--text-secondary); }
 .plan-card__list svg { width: 16px; height: 16px; color: var(--green); flex-shrink: 0; margin-top: 2px; }
 
-/* Planos com poucos itens (ex.: "Gestão + Agendamento Online") centralizam
-   a lista no espaço disponível, em vez de deixar um vão grande só embaixo —
-   ajuste puramente visual, não muda nenhum item/preço do plano. */
 .plan-card__list--compact { justify-content: center; }
 
 .plan-card__cta { margin-top: auto; }
 
 /* -------------------------------------------------------------------------
-   16. Comparativo de planos
+   17. Comparativo de planos
    ------------------------------------------------------------------------- */
 .compare {
   max-width: 820px;
@@ -823,104 +862,24 @@ h1, h2, h3, h4 {
 .compare-card__row .dev { color: var(--text-muted); font-size: var(--fs-xs); font-style: italic; }
 
 /* -------------------------------------------------------------------------
-   16b. Próximas atualizações (roadmap) — propositalmente mais discreto que
-   os planos: fundo neutro, borda tracejada, ícones e badges menores. Não
-   representa recursos disponíveis nem faz parte de nenhum plano.
+   18. "O BarbERP continua evoluindo" (futuras atualizações — discreto)
    ------------------------------------------------------------------------- */
-.roadmap-card {
-  max-width: 980px;
+.evolving__box {
+  max-width: 680px;
   margin-inline: auto;
+  text-align: center;
+  padding: var(--space-7) var(--space-6);
   background: var(--bg-subtle);
   border: 1px dashed var(--border-strong);
   border-radius: var(--radius-lg);
-  padding: var(--space-7) var(--space-6);
 }
-
-.roadmap-card__head {
-  max-width: 560px;
-  margin-inline: auto;
-  margin-bottom: var(--space-7);
-  text-align: center;
-}
-
-.roadmap-card__label {
-  display: inline-block;
-  font-size: var(--fs-xs);
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: var(--space-2);
-}
-
-.roadmap-card__title {
-  font-size: var(--fs-lg);
-  margin-bottom: var(--space-2);
-}
-
-.roadmap-card__text {
-  font-size: var(--fs-sm);
-  color: var(--text-secondary);
-  line-height: 1.6;
-}
-
-.roadmap-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-5);
-}
-
-.roadmap-item {
-  display: flex;
-  gap: var(--space-3);
-  padding: var(--space-4);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-}
-
-.roadmap-item__icon {
-  width: 32px;
-  height: 32px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-sm);
-  background: var(--bg-subtle);
-  color: var(--text-muted);
-}
-.roadmap-item__icon svg { width: 16px; height: 16px; }
-
-.roadmap-item__body { min-width: 0; }
-.roadmap-item__title { font-size: var(--fs-sm); font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
-.roadmap-item__desc { font-size: var(--fs-xs); color: var(--text-secondary); margin-bottom: var(--space-3); line-height: 1.5; }
-
-.roadmap-item__status {
-  background: var(--white);
-  color: var(--text-muted);
-  border-color: var(--border-strong);
-  font-size: 0.6875rem;
-  padding: 3px 10px;
-}
-.roadmap-item__status--dev {
-  background: var(--blue-tint);
-  color: var(--blue-dark);
-  border-color: var(--blue-tint-strong);
-}
-
-.roadmap-card__note {
-  margin-top: var(--space-6);
-  padding-top: var(--space-5);
-  border-top: 1px solid var(--border);
-  font-size: var(--fs-xs);
-  color: var(--text-muted);
-  text-align: center;
-  font-style: italic;
-}
+.evolving__title { font-size: var(--fs-lg); margin-bottom: var(--space-3); }
+.evolving__text { font-size: var(--fs-sm); color: var(--text-secondary); line-height: 1.6; margin-bottom: var(--space-5); }
+.evolving__list { font-size: var(--fs-sm); font-weight: 600; color: var(--text-primary); margin-bottom: var(--space-3); }
+.evolving__note { font-size: var(--fs-xs); color: var(--text-muted); font-style: italic; }
 
 /* -------------------------------------------------------------------------
-   17. Teste gratuito (formulário)
+   19. Teste gratuito (formulário)
    ------------------------------------------------------------------------- */
 .lead-section {
   display: grid;
@@ -1001,7 +960,7 @@ h1, h2, h3, h4 {
 .lead-aside__item svg { width: 17px; height: 17px; color: var(--green); flex-shrink: 0; margin-top: 2px; }
 
 /* -------------------------------------------------------------------------
-   18. FAQ
+   20. FAQ
    ------------------------------------------------------------------------- */
 .faq { max-width: 760px; margin-inline: auto; display: flex; flex-direction: column; gap: var(--space-3); }
 
@@ -1043,14 +1002,14 @@ h1, h2, h3, h4 {
 .faq-item__panel-inner p { font-size: var(--fs-sm); color: var(--text-secondary); line-height: 1.6; }
 
 /* -------------------------------------------------------------------------
-   18b. Contato
+   21. Contato
    ------------------------------------------------------------------------- */
 .contact__box { max-width: 560px; margin-inline: auto; text-align: center; }
 .contact__text { font-size: var(--fs-md); color: var(--text-secondary); margin-bottom: var(--space-5); }
 .contact__links { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-3); }
 
 /* -------------------------------------------------------------------------
-   19. CTA final
+   22. CTA final
    ------------------------------------------------------------------------- */
 .cta-final { text-align: center; }
 .cta-final__title { font-size: var(--fs-2xl); margin-bottom: var(--space-3); }
@@ -1059,7 +1018,7 @@ h1, h2, h3, h4 {
 .cta-final__secondary { margin-top: var(--space-5); font-size: var(--fs-sm); color: var(--text-muted); }
 
 /* -------------------------------------------------------------------------
-   20. Footer
+   23. Footer
    ------------------------------------------------------------------------- */
 .footer { background: var(--bg-subtle); border-top: 1px solid var(--border); padding-block: var(--space-7) var(--space-6); }
 
@@ -1085,7 +1044,67 @@ h1, h2, h3, h4 {
 .footer__bottom { font-size: var(--fs-xs); color: var(--text-muted); }
 
 /* -------------------------------------------------------------------------
-   21. Responsividade
+   24. Lightbox (hero + carrossel)
+   ------------------------------------------------------------------------- */
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: rgba(8, 11, 20, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--dur-base) var(--ease), visibility var(--dur-base);
+}
+.lightbox-overlay.is-open { opacity: 1; visibility: visible; }
+
+.lightbox-overlay__content {
+  position: relative;
+  width: 90vw;
+  height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.lightbox-overlay__content img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  background: var(--white);
+  box-shadow: var(--shadow-lg);
+}
+
+.lightbox-overlay__close {
+  position: absolute;
+  top: -46px;
+  right: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+}
+.lightbox-overlay__close svg { width: 17px; height: 17px; }
+
+@media (max-width: 640px) {
+  .lightbox-overlay { padding: var(--space-4); }
+  .lightbox-overlay__content { width: 92vw; height: 86vh; }
+  .lightbox-overlay__close { top: 10px; right: 10px; background: rgba(8, 11, 20, 0.7); }
+}
+
+/* -------------------------------------------------------------------------
+   25. Responsividade
    ------------------------------------------------------------------------- */
 
 /* >= 640px */
@@ -1102,17 +1121,15 @@ h1, h2, h3, h4 {
 
   .section-title { font-size: var(--fs-2xl); }
 
-  .finance-split { grid-template-columns: repeat(2, 1fr); }
-
-  .online-booking { grid-template-columns: 1.1fr 0.9fr; }
-
   .compare-table { display: table; }
   .compare-cards { display: none; }
 
-  .roadmap-grid { grid-template-columns: repeat(2, 1fr); }
-
   .reasons-grid { grid-template-columns: repeat(3, 1fr); }
   .testimonials-grid { grid-template-columns: repeat(3, 1fr); }
+
+  .carousel__slide { grid-template-columns: 1.3fr 1fr; padding: var(--space-7); }
+
+  .access__grid { grid-template-columns: 1.1fr 0.9fr; }
 
   .footer__top { grid-template-columns: 1.3fr 1fr 1fr; }
 }
@@ -1125,12 +1142,8 @@ h1, h2, h3, h4 {
   .hero__title { max-width: none; }
   .hero__subtitle { max-width: none; }
 
-  .features-grid { grid-template-columns: 1fr; }
-  .product-grid { grid-template-columns: 1fr; gap: var(--space-7); }
-  .finance-split { grid-template-columns: 1fr; }
-
-  .online-booking { padding: var(--space-5); }
-  .online-booking__visual { order: -1; }
+  .carousel-wrap { width: 100%; }
+  .carousel__slide { grid-template-columns: 1fr; padding: var(--space-5); }
 
   .plans-grid { grid-template-columns: 1fr; max-width: 420px; }
 
@@ -1153,8 +1166,6 @@ h1, h2, h3, h4 {
 
   .hero__title { font-size: var(--fs-3xl); }
   .section-title { font-size: 2.375rem; }
-
-  .roadmap-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
 /* >= 1280px */

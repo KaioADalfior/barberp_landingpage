@@ -2,33 +2,22 @@
 /**
  * index.php
  * Landing page comercial do BarbERP (produto da DAK Soluções Digitais) —
- * versão 3.0 (reformulação), apresentando exclusivamente a V1.0 real do
- * sistema: nenhum recurso listado aqui é promessa futura, exceto o plano
- * Enterprise e a seção "Próximas atualizações", ambos claramente marcados
- * como ainda não disponíveis.
+ * versão 4.0 (reformulação completa), apresentando a V1.0 real do sistema.
+ * O único plano/seção que menciona recursos ainda não existentes é o plano
+ * Enterprise e a seção "O BarbERP continua evoluindo", ambos claramente
+ * marcados como em desenvolvimento/futuro.
  *
  * Projeto standalone — NÃO faz parte do sistema BarbERP em si (que fica em
  * outro repositório/hospedagem). Esta página só existe para apresentar o
  * produto e captar leads pelo formulário "Teste gratuito", que grava no
  * banco leads_app_barber através de processar_lead.php (ver config.php).
  *
- * Capturas reais do sistema ficam em assets/images/barberp/. Cada seção usa
- * fotoReal() com uma lista de nomes aceitos — quando um arquivo ainda não
- * existe, um mockup simples em CSS entra no lugar automaticamente (ver
- * seção "Sistema"), sem nenhum aviso de "em breve" na tela.
- *
- * NOTA (reformulação em andamento): a especificação mais recente pede um
- * carrossel grande com lightbox e 10 capturas reais em nomes de arquivo
- * exatos (dashboardprincipal.png, comoagendar.png, agendar.png,
- * alteraragendamento.png, finalizarservico.png, receberfiado.png,
- * dashfinanceiro.png, cliente01.png, cliente02.png, cliente03.png) e uma
- * nova imagem de hero (agenda.png). Nenhum desses 11 arquivos existe hoje
- * em assets/images/barberp/ — por instrução explícita, essa parte NÃO foi
- * implementada para não inventar imagens/telas que não existem. A seção
- * "Sistema" abaixo continua usando o mesmo mecanismo fotoReal() com as 4
- * capturas reais já disponíveis; assim que os 11 arquivos forem
- * adicionados com os nomes exatos, o carrossel/lightbox pode ser
- * implementado por cima dessa mesma base sem quebrar nada.
+ * IMAGENS (ver README.md, seção 3): o hero e o carrossel de funcionalidades
+ * usam nomes de arquivo EXATOS (sem apelidos/alternativas), por instrução
+ * explícita — nenhuma imagem é substituída por outra. Quando um arquivo
+ * exato não existe em assets/images/barberp/, a vaga mostra um painel
+ * neutro (sem simular uma tela falsa) até o arquivo ser adicionado; nesse
+ * momento a foto real aparece sozinha, sem precisar mexer em código.
  */
 
 declare(strict_types=1);
@@ -39,30 +28,86 @@ $anoAtual = date('Y');
  * Dados das seções
  * ---------------------------------------------------------------------- */
 
-$recursos = [
-    ['titulo' => 'Agenda organizada', 'desc' => 'Tenha os horários dos barbeiros organizados em um só lugar.', 'icon' => 'calendar'],
-    ['titulo' => 'Controle de fiados', 'desc' => 'Saiba quem está devendo, quanto deve e quando recebeu.', 'icon' => 'wallet'],
-    ['titulo' => 'Financeiro', 'desc' => 'Acompanhe entradas, saídas e valores a receber.', 'icon' => 'chart'],
-    ['titulo' => 'Clientes', 'desc' => 'Mantenha os dados e o histórico dos seus clientes sempre à mão.', 'icon' => 'users'],
-];
-
-/* Três motivos para organizar a barbearia agora — sem estatísticas nem
- * percentuais inventados, só argumentos ligados a recursos reais da V1.0. */
+/* Três motivos para organizar a barbearia agora — texto exato fornecido,
+ * sem estatísticas nem percentuais inventados. */
 $motivos = [
     [
         'num'   => '01',
-        'titulo' => 'Seus clientes já esperam comodidade',
-        'desc'  => 'Marcar horário por mensagem, esperar resposta e confirmar manualmente toma tempo seu e do cliente. Com o agendamento online, ele escolhe o serviço, o profissional e o horário sozinho, quando quiser.',
+        'titulo' => 'Clientes querem praticidade',
+        'desc'  => 'Hoje o cliente espera resolver tudo rápido, inclusive marcar seu horário.',
     ],
     [
         'num'   => '02',
-        'titulo' => 'O WhatsApp não foi feito para gerenciar uma barbearia',
-        'desc'  => 'Conversas se perdem, horários ficam espalhados entre contatos e é fácil esquecer um fiado ou um agendamento. Um sistema dedicado mantém tudo organizado em um só lugar.',
+        'titulo' => 'WhatsApp sozinho não organiza sua barbearia',
+        'desc'  => 'Ele ajuda na conversa, mas não substitui uma agenda estruturada, histórico de clientes e controle financeiro.',
     ],
     [
         'num'   => '03',
-        'titulo' => 'Organização gera previsibilidade',
-        'desc'  => 'Saber quem vai ser atendido, quanto está por receber e como está o financeiro do mês evita surpresas e facilita decisões no dia a dia da barbearia.',
+        'titulo' => 'Organização traz previsibilidade',
+        'desc'  => 'Menos confusão na rotina significa mais controle sobre horários, atendimentos e dinheiro.',
+    ],
+];
+
+/* Carrossel de funcionalidades — ordem obrigatória, nomes de arquivo
+ * exatos. Nenhum apelido/alternativa é aceito aqui (ver fotoRealExata()). */
+$carrossel = [
+    [
+        'arquivo' => 'dashboardprincipal.png',
+        'titulo'  => 'Tenha uma visão geral da sua barbearia.',
+        'desc'    => 'Acompanhe métricas de agendamentos, evolução mensal, ações rápidas e os principais indicadores do dia.',
+    ],
+    [
+        'arquivo' => 'comoagendar.png',
+        'titulo'  => 'Agende um atendimento em poucos passos.',
+        'desc'    => 'Busque um cliente ou cadastre um novo, selecione o serviço e organize o horário. Também é possível definir recorrências de 7, 15, 20 ou 30 dias e inativar horários quando necessário.',
+    ],
+    [
+        'arquivo' => 'agendar.png',
+        'titulo'  => 'Uma agenda visual para não perder o controle.',
+        'desc'    => 'Visualize os horários do dia de forma clara e identifique rapidamente a situação de cada atendimento.',
+        'legenda' => [
+            ['cor' => '#15803d', 'texto' => 'Disponível'],
+            ['cor' => '#dc2626', 'texto' => 'Agendado'],
+            ['cor' => '#eab308', 'texto' => 'Indisponível'],
+            ['cor' => '#f97316', 'texto' => 'Agendamento via link'],
+            ['cor' => '#a78bfa', 'texto' => 'Agendamento duplicado'],
+        ],
+        'complemento' => 'A agenda também possui lista de espera e permite inativar horários ou dias.',
+    ],
+    [
+        'arquivo' => 'alteraragendamento.png',
+        'titulo'  => 'Flexibilidade quando o cliente muda de ideia.',
+        'desc'    => 'Altere o horário, troque o agendamento com outro cliente do dia ou reorganize os atendimentos conforme a necessidade.',
+    ],
+    [
+        'arquivo' => 'finalizarservico.png',
+        'titulo'  => 'Finalize o atendimento e registre o pagamento.',
+        'desc'    => 'Ao concluir o atendimento, confira o cliente e o serviço realizado, altere o serviço caso necessário, registre ausência e selecione a forma de pagamento. Se o pagamento ficar para depois, o valor pode ser direcionado para o controle de fiados.',
+    ],
+    [
+        'arquivo' => 'receberfiado.png',
+        'titulo'  => 'Controle seus fiados sem perder o histórico.',
+        'desc'    => 'Registre pagamentos parciais ou totais e escolha a forma de pagamento. O cliente pode quitar o valor em diferentes momentos, mantendo o histórico organizado.',
+    ],
+    [
+        'arquivo' => 'dashfinanceiro.png',
+        'titulo'  => 'Entenda para onde está indo o dinheiro.',
+        'desc'    => 'Visualize entradas e saídas por dia, semana, mês ou ano, acompanhe gráficos e veja a distribuição das formas de pagamento.',
+    ],
+    [
+        'arquivo' => 'cliente01.png',
+        'titulo'  => 'Tenha os dados dos seus clientes organizados.',
+        'desc'    => 'Consulte as informações do cliente e defina se ele está ativo ou inativo.',
+    ],
+    [
+        'arquivo' => 'cliente02.png',
+        'titulo'  => 'Veja os atendimentos realizados.',
+        'desc'    => 'Consulte os serviços realizados, datas, horários, valores e status dos atendimentos.',
+    ],
+    [
+        'arquivo' => 'cliente03.png',
+        'titulo'  => 'Histórico completo do cliente.',
+        'desc'    => 'Consulte pagamentos, valores lançados em fiado e movimentações relacionadas ao cliente. Também é possível lançar um fiado manualmente.',
     ],
 ];
 
@@ -70,14 +115,14 @@ $planos = [
     [
         'nome'  => 'Básico',
         'preco' => '68,90',
-        'desc'  => 'Para barbearias que querem organizar a gestão.',
+        'desc'  => 'Para organizar a rotina e ter controle da sua barbearia.',
         'itens' => ['Clientes', 'Serviços', 'Barbeiros', 'Agendamentos', 'Agendamentos recorrentes', 'Controle de fiados', 'Financeiro', 'Dashboard', 'Perfis', 'Configurações'],
         'destaque' => false,
     ],
     [
         'nome'  => 'Pro',
         'preco' => '98,90',
-        'desc'  => 'Para quem também quer permitir que os clientes agendem sozinhos.',
+        'desc'  => 'Para barbearias que também querem oferecer agendamento online.',
         'itens' => ['Tudo do plano Básico', 'Agendamento online', 'Link público de agendamento'],
         'destaque' => true,
         'badge'    => 'Recomendado',
@@ -85,8 +130,8 @@ $planos = [
     [
         'nome'  => 'Enterprise',
         'preco' => '129,90',
-        'desc'  => 'Para barbearias maiores, com recursos avançados ainda em desenvolvimento.',
-        'itens' => ['Tudo do plano Pro', 'Gestão via WhatsApp', 'Lembretes automáticos'],
+        'desc'  => 'Para operações maiores e necessidades específicas.',
+        'itens' => ['Tudo do plano Pro', 'Gestão via WhatsApp', 'Lembretes', 'Mais de 5 barbeiros', 'Até 2 barbearias'],
         'destaque' => false,
         'badge'    => 'Em desenvolvimento',
         'emDesenvolvimento' => true,
@@ -99,9 +144,9 @@ $compareFeatures = [
     ['label' => 'Clientes', 'basico' => true, 'pro' => true, 'enterprise' => true],
     ['label' => 'Serviços', 'basico' => true, 'pro' => true, 'enterprise' => true],
     ['label' => 'Barbeiros', 'basico' => true, 'pro' => true, 'enterprise' => true],
-    ['label' => 'Agenda', 'basico' => true, 'pro' => true, 'enterprise' => true],
-    ['label' => 'Agendamentos recorrentes', 'basico' => true, 'pro' => true, 'enterprise' => true],
-    ['label' => 'Controle de fiados', 'basico' => true, 'pro' => true, 'enterprise' => true],
+    ['label' => 'Agendamentos', 'basico' => true, 'pro' => true, 'enterprise' => true],
+    ['label' => 'Recorrência', 'basico' => true, 'pro' => true, 'enterprise' => true],
+    ['label' => 'Fiados', 'basico' => true, 'pro' => true, 'enterprise' => true],
     ['label' => 'Financeiro', 'basico' => true, 'pro' => true, 'enterprise' => true],
     ['label' => 'Dashboard', 'basico' => true, 'pro' => true, 'enterprise' => true],
     ['label' => 'Agendamento online', 'basico' => false, 'pro' => true, 'enterprise' => true],
@@ -109,31 +154,21 @@ $compareFeatures = [
     ['label' => 'Lembretes', 'basico' => false, 'pro' => false, 'enterprise' => 'dev'],
 ];
 
-/* Próximas atualizações — recursos ainda NÃO disponíveis na V1.0. Não
- * pertencem a nenhum plano, não têm preço e não devem ser confundidos com
- * os recursos reais acima. */
-$atualizacoesFuturas = [
-    ['titulo' => 'Integração com WhatsApp', 'desc' => 'Comunicação com clientes direto pelo WhatsApp.', 'status' => 'Em desenvolvimento', 'icon' => 'whatsapp'],
-    ['titulo' => 'Lembretes automáticos', 'desc' => 'Avisos automáticos de agendamentos para os clientes.', 'status' => 'Em desenvolvimento', 'icon' => 'bell'],
-    ['titulo' => 'Controle de estoque', 'desc' => 'Produtos, entradas, saídas e movimentações.', 'status' => 'Planejado', 'icon' => 'package'],
-    ['titulo' => 'Controle de comissões', 'desc' => 'Comissões e desempenho por barbeiro.', 'status' => 'Planejado', 'icon' => 'percent'],
-    ['titulo' => 'Relatórios avançados', 'desc' => 'Indicadores e análises mais detalhadas.', 'status' => 'Planejado', 'icon' => 'bars'],
-];
-
 $faqs = [
-    ['p' => 'Preciso instalar algum programa?', 'r' => 'Não. O BarbERP funciona direto do navegador, sem instalação.'],
-    ['p' => 'Posso acessar pelo celular?', 'r' => 'Sim. O BarbERP funciona no computador, notebook, tablet ou celular, direto pelo navegador.'],
-    ['p' => 'Meu cliente pode agendar sozinho?', 'r' => 'Sim, no plano Pro, com o agendamento online e o link público de agendamento.'],
-    ['p' => 'Posso controlar fiados?', 'r' => 'Sim. Você registra os valores pendentes e acompanha os pagamentos, parciais ou totais.'],
-    ['p' => 'O período gratuito tem algum custo?', 'r' => 'Não. São 30 dias grátis, sem necessidade de cartão de crédito.'],
-    ['p' => 'Como eu começo?', 'r' => 'Preencha o formulário de teste gratuito nesta página. Nossa equipe entra em contato para liberar seu acesso.'],
+    ['p' => 'Preciso instalar alguma coisa?', 'r' => 'Não. O BarbERP funciona pelo navegador.'],
+    ['p' => 'Posso acessar pelo celular?', 'r' => 'Sim. O sistema é web e pode ser acessado em dispositivos com navegador e internet.'],
+    ['p' => 'O cliente pode agendar sozinho?', 'r' => 'Sim. O agendamento online está disponível no plano Pro.'],
+    ['p' => 'Posso controlar os fiados?', 'r' => 'Sim. O BarbERP possui controle de fiados e histórico de pagamentos.'],
+    ['p' => 'Existe período gratuito?', 'r' => 'Sim. O teste é de 30 dias e não exige cartão.'],
+    ['p' => 'Como faço para começar?', 'r' => 'Preencha o formulário de teste gratuito ou entre em contato conosco pelo WhatsApp ou Instagram.'],
 ];
 
 /* -------------------------------------------------------------------------
- * Fotos reais do sistema — aceita mais de um nome de arquivo possível para
- * a mesma foto, assim um arquivo salvo com o nome "errado" continua
- * funcionando em vez de cair silenciosamente no mockup em CSS.
+ * Fotos reais do sistema.
  * ---------------------------------------------------------------------- */
+
+/* Mantida para compatibilidade com nomes alternativos já usados no projeto
+ * (não se aplica às imagens novas do hero/carrossel — ver fotoRealExata). */
 function fotoReal(array $nomesPossiveis): ?string
 {
     foreach ($nomesPossiveis as $nome) {
@@ -145,10 +180,17 @@ function fotoReal(array $nomesPossiveis): ?string
     return null;
 }
 
+/* Hero e carrossel exigem o nome de arquivo EXATO pedido — nunca um
+ * apelido nem outra foto real do projeto no lugar dela, para nunca
+ * apresentar uma imagem como se fosse outra. */
+function fotoRealExata(string $nomeExato): ?string
+{
+    $caminhoRelativo = 'assets/images/barberp/' . $nomeExato;
+    return file_exists(__DIR__ . '/' . $caminhoRelativo) ? $caminhoRelativo : null;
+}
+
 /* -------------------------------------------------------------------------
- * Cache-busting automático para CSS/JS — acrescenta ?v=<data de modificação
- * do arquivo> em cada link, para que um deploy novo nunca fique "preso" em
- * cache de CSS/JS do navegador do visitante.
+ * Cache-busting automático para CSS/JS.
  * ---------------------------------------------------------------------- */
 function versaoAsset(string $caminhoRelativo): string
 {
@@ -182,13 +224,17 @@ function icon(string $nome, string $classe = ''): string
         'whatsapp'    => '<path d="M20.5 11.5a8.5 8.5 0 0 1-12.4 7.5L4 20l1.1-4a8.5 8.5 0 1 1 15.4-4.5Z"/><path d="M9 9.2c.2-.6.5-.6.8-.6.2 0 .4 0 .6.4.2.5.6 1.4.6 1.6 0 .1 0 .3-.1.4-.2.3-.4.5-.6.7-.1.2-.3.3 0 .6.4.6 1 1.2 1.6 1.6.6.4 1 .6 1.3.7.2.1.4.1.5-.1.2-.2.6-.7.8-.9.2-.2.3-.2.5-.1.2.1 1.4.6 1.6.8.2.1.3.2.3.3 0 .2 0 .7-.3 1.1-.3.4-1.2.8-1.7.8s-1.4-.1-2.9-1c-2.2-1.3-3.6-3.5-3.7-3.7-.1-.2-.9-1.2-.9-2.1 0-.9.5-1.3.7-1.5Z"/>',
         'package'     => '<path d="M3.5 7.5 12 3l8.5 4.5V16.5L12 21l-8.5-4.5Z"/><path d="M3.8 7.7 12 12l8.2-4.3M12 12v9"/>',
         'percent'     => '<path d="M6 18 18 6"/><circle cx="7.5" cy="7.5" r="2"/><circle cx="16.5" cy="16.5" r="2"/>',
-        'bag'         => '<path d="M5 8.5h14l-1 11.5H6L5 8.5Z"/><path d="M8.5 8.5v-2a3.5 3.5 0 0 1 7 0v2"/>',
         'bars'        => '<rect x="4" y="12" width="3.6" height="8" rx="0.8"/><rect x="10.2" y="7" width="3.6" height="13" rx="0.8"/><rect x="16.4" y="3.5" width="3.6" height="16.5" rx="0.8"/>',
-        'heart'       => '<path d="M12 20.2S4 15.4 4 9.8a4.3 4.3 0 0 1 8-2.1A4.3 4.3 0 0 1 20 9.8c0 5.6-8 10.4-8 10.4Z"/>',
-        'building'    => '<rect x="4" y="3.5" width="10" height="17" rx="1.2"/><rect x="14" y="9.5" width="6" height="11" rx="1.2"/><path d="M7 7.5h1.5M7 11h1.5M7 14.5h1.5"/>',
         'bell'        => '<path d="M12 3.5c-3 0-4.6 2.3-4.6 5.4v2.6c0 .9-.3 1.7-.9 2.4l-.8 1h12.6l-.8-1c-.6-.7-.9-1.5-.9-2.4V8.9c0-3.1-1.6-5.4-4.6-5.4Z"/><path d="M9.8 19a2.2 2.2 0 0 0 4.4 0"/>',
         'globe'       => '<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.2 2.3 3.4 5.3 3.4 8.5s-1.2 6.2-3.4 8.5c-2.2-2.3-3.4-5.3-3.4-8.5S9.8 5.8 12 3.5Z"/>',
         'quote'       => '<path d="M7.5 9.5c-1.7 0-3 1.3-3 3v2.5c0 1.1.9 2 2 2h2.5v-4.5h-2v-.5c0-1.1.9-2 2-2V9.5h-1.5Z"/><path d="M16 9.5c-1.7 0-3 1.3-3 3v2.5c0 1.1.9 2 2 2h2.5v-4.5h-2v-.5c0-1.1.9-2 2-2V9.5H16Z"/>',
+        'monitor'     => '<rect x="2.5" y="4.5" width="19" height="13" rx="1.6"/><path d="M8 20.5h8M12 17.5v3"/>',
+        'laptop'      => '<rect x="4" y="4.5" width="16" height="10.5" rx="1.4"/><path d="M2.5 19.5h19l-1.3-3H3.8l-1.3 3Z"/>',
+        'tablet'      => '<rect x="5" y="2.8" width="14" height="18.4" rx="2"/><path d="M11.4 18.3h1.2"/>',
+        'smartphone'  => '<rect x="7" y="2.5" width="10" height="19" rx="2.2"/><path d="M11.3 18.2h1.4"/>',
+        'chevron-left'  => '<path d="M14.5 5 7.5 12l7 7"/>',
+        'chevron-right' => '<path d="M9.5 5 16.5 12l-7 7"/>',
+        'expand'      => '<path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5"/>',
     ];
 
     $miolo = $paths[$nome] ?? $paths['check'];
@@ -196,28 +242,29 @@ function icon(string $nome, string $classe = ''): string
     return "<svg {$atributos}>{$miolo}</svg>";
 }
 
-/* Fotos usadas nas seções abaixo */
-$fotoDashboard   = fotoReal(['dashboard.png', 'dashboard_principal.png']);
-$fotoAgenda      = fotoReal(['agendamentos.png', 'agenda.png']);
-$fotoFinanceiro  = fotoReal(['financeiro.png', 'dashboard_fin.png']);
-$fotoFiados      = fotoReal(['fiados.png', 'receber_fiado.png']);
-$fotoAgendaLink  = fotoReal(['agenda-online01.png', 'agenda_link01.png', 'agendar_link01.png']);
+/* Fotos usadas na seção "Acesse de onde estiver" — mantém o padrão
+ * resiliente de nomes alternativos, já que não foi pedida como parte do
+ * conjunto de nomes exatos do carrossel. */
+$fotoTresJuntos = fotoReal(['tresjuntos.png']);
+
+/* Hero e carrossel: nome de arquivo exato, sem substituição. */
+$fotoHero = fotoRealExata('agenda.png');
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BarbERP | Gestão simples para barbearias</title>
-<meta name="description" content="Agenda, clientes, fiados e financeiro da sua barbearia em um só lugar. Conheça o BarbERP e teste grátis por 30 dias.">
+<title>BarbERP — Sistema de Gestão para Barbearias</title>
+<meta name="description" content="Organize agenda, clientes, fiados e financeiro da sua barbearia com o BarbERP. Teste grátis por 30 dias.">
 <meta name="theme-color" content="#ffffff">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%232554E8'/%3E%3Ctext x='12' y='17' font-size='13' font-family='Arial,Helvetica,sans-serif' font-weight='700' fill='white' text-anchor='middle'%3EB%3C/text%3E%3C/svg%3E">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
-<meta property="og:title" content="BarbERP | Gestão simples para barbearias">
-<meta property="og:description" content="Agenda, clientes, fiados e financeiro em um só lugar. Teste o BarbERP grátis por 30 dias.">
+<meta property="og:title" content="BarbERP — Sistema de Gestão para Barbearias">
+<meta property="og:description" content="Organize agenda, clientes, fiados e financeiro da sua barbearia com o BarbERP. Teste grátis por 30 dias.">
 <meta property="og:site_name" content="BarbERP">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -227,8 +274,9 @@ $fotoAgendaLink  = fotoReal(['agenda-online01.png', 'agenda_link01.png', 'agenda
 <link rel="preconnect" href="/">
 <link rel="stylesheet" href="<?= htmlspecialchars(versaoAsset('assets/css/style.css')) ?>">
 
-<!-- Sem JavaScript: menu mobile fica sempre visível, e o FAQ mostra todas
-     as respostas abertas, sem depender de clique para revelar. -->
+<!-- Sem JavaScript: menu mobile fica sempre visível, o FAQ mostra todas as
+     respostas abertas e o carrossel mostra todas as slides empilhadas (sem
+     depender de clique para revelar nenhum conteúdo). -->
 <noscript>
 <style>
     .hamburger { display: none; }
@@ -250,6 +298,9 @@ $fotoAgendaLink  = fotoReal(['agenda-online01.png', 'agenda_link01.png', 'agenda
     .mobile-nav__link { border-bottom: none; padding: var(--space-2); font-size: var(--fs-sm); }
     .mobile-nav .btn { margin-top: 0; width: auto; }
     .faq-item__panel { height: auto !important; }
+    .carousel__track { display: block !important; transform: none !important; }
+    .carousel__slide { display: grid !important; margin-bottom: var(--space-6); }
+    .carousel__controls { display: none !important; }
 </style>
 </noscript>
 </head>
@@ -312,17 +363,18 @@ $fotoAgendaLink  = fotoReal(['agenda-online01.png', 'agenda_link01.png', 'agenda
             </div>
 
             <div class="hero__visual reveal">
-                <?php if ($fotoDashboard !== null): ?>
-                <div class="browser-frame">
-                    <div class="browser-frame__bar">
-                        <span class="browser-frame__dot"></span>
-                        <span class="browser-frame__dot"></span>
-                        <span class="browser-frame__dot"></span>
+                <?php if ($fotoHero !== null): ?>
+                <button type="button" class="img-trigger" data-lightbox-src="/<?= htmlspecialchars($fotoHero) ?>" data-lightbox-alt="Tela do BarbERP">
+                    <div class="browser-frame">
+                        <div class="browser-frame__bar">
+                            <span class="browser-frame__dot"></span><span class="browser-frame__dot"></span><span class="browser-frame__dot"></span>
+                        </div>
+                        <div class="browser-frame__body">
+                            <img src="/<?= htmlspecialchars($fotoHero) ?>" alt="Tela do BarbERP" loading="eager" decoding="async">
+                        </div>
                     </div>
-                    <div class="browser-frame__body">
-                        <img src="/<?= htmlspecialchars($fotoDashboard) ?>" alt="Dashboard do BarbERP com indicadores de atendimentos, faturamento e agenda" loading="eager" decoding="async">
-                    </div>
-                </div>
+                    <span class="img-trigger__hint"><?= icon('expand') ?></span>
+                </button>
                 <?php else: ?>
                 <div class="browser-frame">
                     <div class="browser-frame__bar">
@@ -373,108 +425,87 @@ $fotoAgendaLink  = fotoReal(['agenda-online01.png', 'agenda_link01.png', 'agenda
         </div>
     </section>
 
-    <!-- ======================= RECURSOS (4 cards) ======================= -->
+    <!-- ======================= SISTEMA / CARROSSEL ======================= -->
     <section class="section section--tight" id="recursos">
-        <div class="container">
-            <div class="section-header section-header--center reveal">
-                <span class="section-eyebrow">Recursos</span>
-                <h2 class="section-title">Feito para a rotina da barbearia.</h2>
-            </div>
-
-            <div class="features-grid">
-                <?php foreach ($recursos as $r): ?>
-                <div class="feature-card reveal">
-                    <div class="feature-card__icon"><?= icon($r['icon']) ?></div>
-                    <h3 class="feature-card__title"><?= htmlspecialchars($r['titulo']) ?></h3>
-                    <p class="feature-card__desc"><?= htmlspecialchars($r['desc']) ?></p>
-                </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </section>
-
-    <!-- ======================= SISTEMA (capturas reais) =======================
-         Carrossel + lightbox com as 10 imagens pedidas ficam pendentes: nenhum
-         dos arquivos com nome exato existe ainda em assets/images/barberp/.
-         Enquanto isso, esta seção mostra as 4 capturas reais já disponíveis
-         (ou o mockup em CSS, sem nenhum aviso de "em breve" visível). -->
-    <section class="section section--alt" id="sistema">
         <div class="container">
             <div class="section-header section-header--center reveal">
                 <span class="section-eyebrow">O sistema</span>
                 <h2 class="section-title">Tudo o que você precisa para organizar o dia a dia.</h2>
+                <p class="section-subtitle">Conheça algumas das principais funções do BarbERP na prática.</p>
             </div>
+        </div>
 
-            <div class="product-grid">
-                <div class="product-item reveal">
-                    <?php if ($fotoAgenda !== null): ?>
-                    <div class="browser-frame">
-                        <div class="browser-frame__bar"><span class="browser-frame__dot"></span><span class="browser-frame__dot"></span><span class="browser-frame__dot"></span></div>
-                        <div class="browser-frame__body"><img src="/<?= htmlspecialchars($fotoAgenda) ?>" alt="Agenda do BarbERP organizada por barbeiro e horário" loading="lazy" decoding="async"></div>
-                    </div>
-                    <?php else: ?>
-                    <div class="browser-frame">
-                        <div class="browser-frame__bar"><span class="browser-frame__dot"></span><span class="browser-frame__dot"></span><span class="browser-frame__dot"></span></div>
-                        <div class="browser-frame__body agenda-mock">
-                            <div class="agenda-mock__head"><span class="agenda-mock__title">Agenda de hoje</span><span class="agenda-mock__sub">2 barbeiros</span></div>
-                            <div class="agenda-mock__cols">
-                                <span></span><span class="agenda-mock__colhead">João</span><span class="agenda-mock__colhead">Pedro</span>
-                                <span class="agenda-mock__time">09:00</span><span class="agenda-mock__cell agenda-mock__cell--blue"></span><span class="agenda-mock__cell"></span>
-                                <span class="agenda-mock__time">10:00</span><span class="agenda-mock__cell"></span><span class="agenda-mock__cell agenda-mock__cell--green"></span>
-                                <span class="agenda-mock__time">11:00</span><span class="agenda-mock__cell agenda-mock__cell--blue"></span><span class="agenda-mock__cell"></span>
-                                <span class="agenda-mock__time">12:00</span><span class="agenda-mock__cell"></span><span class="agenda-mock__cell"></span>
+        <div class="carousel-wrap reveal" data-carousel>
+            <div class="carousel__viewport">
+                <div class="carousel__track" data-carousel-track>
+                    <?php foreach ($carrossel as $i => $item): $foto = fotoRealExata($item['arquivo']); ?>
+                    <div class="carousel__slide" data-carousel-slide aria-hidden="<?= $i === 0 ? 'false' : 'true' ?>">
+                        <div class="carousel__media">
+                            <?php if ($foto !== null): ?>
+                            <button type="button" class="img-trigger" data-lightbox-src="/<?= htmlspecialchars($foto) ?>" data-lightbox-alt="<?= htmlspecialchars($item['titulo']) ?>">
+                                <div class="browser-frame">
+                                    <div class="browser-frame__bar"><span class="browser-frame__dot"></span><span class="browser-frame__dot"></span><span class="browser-frame__dot"></span></div>
+                                    <div class="browser-frame__body"><img src="/<?= htmlspecialchars($foto) ?>" alt="<?= htmlspecialchars($item['titulo']) ?>" loading="lazy" decoding="async"></div>
+                                </div>
+                                <span class="img-trigger__hint"><?= icon('expand') ?></span>
+                            </button>
+                            <?php else: ?>
+                            <div class="media-placeholder" aria-hidden="true">
+                                <?= icon('chart') ?>
                             </div>
+                            <?php endif; ?>
+                        </div>
+                        <div class="carousel__info">
+                            <span class="carousel__step">Funcionalidade <?= $i + 1 ?> de <?= count($carrossel) ?></span>
+                            <h3 class="carousel__title"><?= htmlspecialchars($item['titulo']) ?></h3>
+                            <p class="carousel__desc"><?= htmlspecialchars($item['desc']) ?></p>
+
+                            <?php if (!empty($item['legenda'])): ?>
+                            <div class="carousel__legend">
+                                <?php foreach ($item['legenda'] as $leg): ?>
+                                <span class="carousel__legend-item"><span class="carousel__legend-dot" style="background:<?= htmlspecialchars($leg['cor']) ?>"></span><?= htmlspecialchars($leg['texto']) ?></span>
+                                <?php endforeach; ?>
+                            </div>
+                            <?php endif; ?>
+
+                            <?php if (!empty($item['complemento'])): ?>
+                            <p class="carousel__complement"><?= htmlspecialchars($item['complemento']) ?></p>
+                            <?php endif; ?>
                         </div>
                     </div>
-                    <?php endif; ?>
-                    <p class="product-item__caption">Agenda</p>
-                    <p class="product-item__desc">Horários organizados por barbeiro, com status de cada atendimento.</p>
+                    <?php endforeach; ?>
                 </div>
+            </div>
 
-                <div class="product-item reveal">
-                    <?php if ($fotoFinanceiro !== null): ?>
-                    <div class="browser-frame">
-                        <div class="browser-frame__bar"><span class="browser-frame__dot"></span><span class="browser-frame__dot"></span><span class="browser-frame__dot"></span></div>
-                        <div class="browser-frame__body"><img src="/<?= htmlspecialchars($fotoFinanceiro) ?>" alt="Dashboard financeiro do BarbERP com entradas, saídas e saldo" loading="lazy" decoding="async"></div>
-                    </div>
-                    <?php endif; ?>
-                    <p class="product-item__caption">Dashboard financeiro</p>
-                    <p class="product-item__desc">Entradas, saídas e saldo sempre à vista.</p>
-                </div>
-
-                <div class="product-item reveal">
-                    <?php if ($fotoFiados !== null): ?>
-                    <div class="browser-frame">
-                        <div class="browser-frame__bar"><span class="browser-frame__dot"></span><span class="browser-frame__dot"></span><span class="browser-frame__dot"></span></div>
-                        <div class="browser-frame__body"><img src="/<?= htmlspecialchars($fotoFiados) ?>" alt="Tela de baixa de fiado do BarbERP" loading="lazy" decoding="async"></div>
-                    </div>
-                    <?php endif; ?>
-                    <p class="product-item__caption">Controle de fiados</p>
-                    <p class="product-item__desc">Valores pendentes, histórico e baixa de pagamento.</p>
-                </div>
-
-                <div class="product-item reveal">
-                    <?php if ($fotoAgendaLink !== null): ?>
-                    <div class="browser-frame browser-frame--phone">
-                        <div class="browser-frame__bar"><span class="browser-frame__dot"></span><span class="browser-frame__dot"></span><span class="browser-frame__dot"></span></div>
-                        <div class="browser-frame__body"><img src="/<?= htmlspecialchars($fotoAgendaLink) ?>" alt="Tela de agendamento online: cliente escolhe data e horário" loading="lazy" decoding="async"></div>
-                    </div>
-                    <?php endif; ?>
-                    <p class="product-item__caption">Agendamento online</p>
-                    <p class="product-item__desc">Cliente escolhe o serviço, o barbeiro e o horário sozinho. Disponível no plano Pro.</p>
-                </div>
+            <div class="carousel__controls">
+                <button type="button" class="carousel__arrow" data-carousel-prev aria-label="Funcionalidade anterior"><?= icon('chevron-left') ?></button>
+                <div class="carousel__dots" data-carousel-dots></div>
+                <button type="button" class="carousel__arrow" data-carousel-next aria-label="Próxima funcionalidade"><?= icon('chevron-right') ?></button>
             </div>
         </div>
     </section>
 
     <!-- ======================= ACESSE DE ONDE ESTIVER ======================= -->
-    <section class="section section--tight access">
-        <div class="container">
-            <div class="access__box reveal">
+    <section class="section section--alt access">
+        <div class="container access__grid">
+            <div class="access__content reveal">
                 <span class="access__icon"><?= icon('globe') ?></span>
-                <h2 class="access__title">Acesse de onde estiver</h2>
-                <p class="access__text">O BarbERP funciona direto do navegador, no computador, notebook, tablet ou celular — sem precisar instalar nada.</p>
+                <h2 class="access__title">Acesse de onde estiver.</h2>
+                <p class="access__text">O BarbERP é um sistema web. Não precisa instalar programas e pode ser acessado pelo navegador em computadores, notebooks, tablets e celulares, de qualquer lugar com acesso à internet.</p>
+                <div class="access__devices">
+                    <span class="access__device"><?= icon('monitor') ?>Computador</span>
+                    <span class="access__device"><?= icon('laptop') ?>Notebook</span>
+                    <span class="access__device"><?= icon('tablet') ?>Tablet</span>
+                    <span class="access__device"><?= icon('smartphone') ?>Celular</span>
+                </div>
             </div>
+            <?php if ($fotoTresJuntos !== null): ?>
+            <div class="access__visual reveal">
+                <button type="button" class="img-trigger" data-lightbox-src="/<?= htmlspecialchars($fotoTresJuntos) ?>" data-lightbox-alt="BarbERP em computador, tablet e celular">
+                    <img src="/<?= htmlspecialchars($fotoTresJuntos) ?>" alt="BarbERP em computador, tablet e celular" loading="lazy" decoding="async" class="access__img">
+                </button>
+            </div>
+            <?php endif; ?>
         </div>
     </section>
 
@@ -487,16 +518,22 @@ $fotoAgendaLink  = fotoReal(['agenda-online01.png', 'agenda_link01.png', 'agenda
             </div>
 
             <div class="testimonials-grid">
-                <?php for ($i = 0; $i < 3; $i++): ?>
+                <div class="testimonial-card reveal">
+                    <span class="testimonial-card__icon"><?= icon('quote') ?></span>
+                    <p class="testimonial-card__text">"Troquei a agenda manual pela função de agendamentos recorrentes, de 15 em 15 e de 20 em 20 dias. Hoje me sinto muito mais organizado e realizado com o BarbERP."</p>
+                    <p class="testimonial-card__name">Alex Monteiro</p>
+                </div>
+
                 <div class="testimonial-skeleton reveal">
                     <span class="testimonial-skeleton__icon"><?= icon('quote') ?></span>
-                    <span class="testimonial-skeleton__line testimonial-skeleton__line--w80"></span>
-                    <span class="testimonial-skeleton__line testimonial-skeleton__line--w60"></span>
-                    <span class="testimonial-skeleton__line testimonial-skeleton__line--w40"></span>
+                    <p class="testimonial-skeleton__placeholder">Depoimento real de cliente será inserido aqui.</p>
                 </div>
-                <?php endfor; ?>
+
+                <div class="testimonial-skeleton reveal">
+                    <span class="testimonial-skeleton__icon"><?= icon('quote') ?></span>
+                    <p class="testimonial-skeleton__placeholder">Depoimento real de cliente será inserido aqui.</p>
+                </div>
             </div>
-            <p class="testimonials-note">Em breve, depoimentos reais de barbearias que usam o BarbERP aparecerão aqui.</p>
         </div>
     </section>
 
@@ -505,7 +542,8 @@ $fotoAgendaLink  = fotoReal(['agenda-online01.png', 'agenda_link01.png', 'agenda
         <div class="container">
             <div class="section-header section-header--center reveal">
                 <span class="section-eyebrow">Planos</span>
-                <h2 class="section-title">Quanto custa?</h2>
+                <h2 class="section-title">Escolha o plano para sua barbearia.</h2>
+                <p class="section-subtitle">Comece com o essencial e evolua conforme sua necessidade.</p>
             </div>
 
             <div class="plans-grid">
@@ -528,7 +566,7 @@ $fotoAgendaLink  = fotoReal(['agenda-online01.png', 'agenda_link01.png', 'agenda
                     <div class="plan-card__cta">
                         <?php if ($dev): ?>
                         <span class="btn btn--secondary btn--block plan-card__cta--disabled" aria-disabled="true">Em desenvolvimento</span>
-                        <p class="plan-card__dev-note">Este plano ainda não está disponível para contratação.</p>
+                        <p class="plan-card__dev-note">Alguns recursos deste plano serão disponibilizados em futuras atualizações.</p>
                         <?php else: ?>
                         <a href="#teste-gratuito" class="btn <?= $p['destaque'] ? 'btn--primary' : 'btn--secondary' ?> btn--block" data-cta-plano="<?= htmlspecialchars($p['nome']) ?>">Começar agora</a>
                         <?php endif; ?>
@@ -594,30 +632,15 @@ $fotoAgendaLink  = fotoReal(['agenda-online01.png', 'agenda_link01.png', 'agenda
         </div>
     </section>
 
-    <!-- ======================= PRÓXIMAS ATUALIZAÇÕES ======================= -->
-    <section class="section section--tight" id="atualizacoes">
+    <!-- ======================= O BARBERP CONTINUA EVOLUINDO ======================= -->
+    <section class="section section--tight evolving">
         <div class="container">
-            <div class="roadmap-card reveal">
-                <div class="roadmap-card__head">
-                    <span class="roadmap-card__label">Roadmap</span>
-                    <h2 class="roadmap-card__title">Próximas atualizações</h2>
-                    <p class="roadmap-card__text">O BarbERP continua evoluindo. Novos recursos serão adicionados gradualmente para tornar a gestão da sua barbearia ainda mais completa.</p>
-                </div>
-
-                <div class="roadmap-grid">
-                    <?php foreach ($atualizacoesFuturas as $rf): ?>
-                    <div class="roadmap-item">
-                        <span class="roadmap-item__icon"><?= icon($rf['icon']) ?></span>
-                        <div class="roadmap-item__body">
-                            <p class="roadmap-item__title"><?= htmlspecialchars($rf['titulo']) ?></p>
-                            <p class="roadmap-item__desc"><?= htmlspecialchars($rf['desc']) ?></p>
-                            <span class="badge roadmap-item__status<?= $rf['status'] === 'Em desenvolvimento' ? ' roadmap-item__status--dev' : '' ?>"><?= htmlspecialchars($rf['status']) ?></span>
-                        </div>
-                    </div>
-                    <?php endforeach; ?>
-                </div>
-
-                <p class="roadmap-card__note">Os recursos apresentados acima não fazem parte da versão 1.0 atual e poderão ser disponibilizados gradualmente em futuras atualizações.</p>
+            <div class="evolving__box reveal">
+                <span class="section-eyebrow">Roadmap</span>
+                <h2 class="evolving__title">O BarbERP continua evoluindo.</h2>
+                <p class="evolving__text">A DAK Soluções Digitais conversa com cada cliente para entender suas necessidades. Novas funcionalidades poderão ser desenvolvidas e adicionadas às próximas versões do sistema.</p>
+                <p class="evolving__list">WhatsApp · Lembretes · Estoque · Comissões · Relatórios avançados</p>
+                <p class="evolving__note">Recursos sujeitos a desenvolvimento e disponibilidade em futuras versões.</p>
             </div>
         </div>
     </section>
@@ -626,8 +649,8 @@ $fotoAgendaLink  = fotoReal(['agenda-online01.png', 'agenda_link01.png', 'agenda
     <section class="section section--alt" id="faq">
         <div class="container">
             <div class="section-header section-header--center reveal">
-                <span class="section-eyebrow">Perguntas frequentes</span>
-                <h2 class="section-title">E minhas dúvidas?</h2>
+                <span class="section-eyebrow">FAQ</span>
+                <h2 class="section-title">Perguntas frequentes</h2>
             </div>
 
             <div class="faq" data-faq>
@@ -782,8 +805,18 @@ $fotoAgendaLink  = fotoReal(['agenda-online01.png', 'agenda_link01.png', 'agenda
     </div>
 </footer>
 
+<!-- ======================= LIGHTBOX (hero + carrossel) ======================= -->
+<div class="lightbox-overlay" data-lightbox-overlay role="dialog" aria-modal="true" aria-label="Visualização de imagem">
+    <div class="lightbox-overlay__content">
+        <button type="button" class="lightbox-overlay__close" data-lightbox-close aria-label="Fechar"><?= icon('x') ?></button>
+        <img data-lightbox-img alt="">
+    </div>
+</div>
+
 <script src="<?= htmlspecialchars(versaoAsset('assets/js/main.js')) ?>" defer></script>
 <script src="<?= htmlspecialchars(versaoAsset('assets/js/faq.js')) ?>" defer></script>
 <script src="<?= htmlspecialchars(versaoAsset('assets/js/form.js')) ?>" defer></script>
+<script src="<?= htmlspecialchars(versaoAsset('assets/js/carousel.js')) ?>" defer></script>
+<script src="<?= htmlspecialchars(versaoAsset('assets/js/lightbox.js')) ?>" defer></script>
 </body>
 </html>
