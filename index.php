@@ -257,7 +257,7 @@ function estrelaSvg(): string
 $fotoTresJuntos = fotoReal(['tresjuntos.png']);
 
 /* Hero e carrossel: nome de arquivo exato, sem substituição. */
-$fotoHero = fotoRealExata('agenda.png');
+$fotoHero = fotoRealExata('agendar.png');
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
